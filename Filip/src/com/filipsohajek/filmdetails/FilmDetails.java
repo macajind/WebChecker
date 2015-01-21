@@ -1,6 +1,8 @@
 package com.filipsohajek.filmdetails;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -12,7 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class FilmDetails {
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) throws JSONException, MalformedURLException {
         int fid = 227786;
         String surl = "http://csfdapi.cz/movie/" + String.valueOf(fid);
         URL url = new URL(surl);
@@ -29,9 +31,13 @@ public class FilmDetails {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder out = new StringBuilder();
         String line;
-        while ((line = reader.readLine()) != null) {
-            out.append(line);
+        try {
+            while ((line = reader.readLine()) != null) {
+                out.append(line);
+            }
+        } catch (IOException e) {
+            System.err.println("Unknown I/O error while reading response from server! Dying...");
         }
-        String json = out.toString();
+      
     }
 }
