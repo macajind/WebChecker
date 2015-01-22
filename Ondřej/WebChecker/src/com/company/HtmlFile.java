@@ -1,7 +1,5 @@
 package com.company;
 
-import com.sun.xml.internal.ws.util.StringUtils;
-
 import java.util.ArrayList;
 
 /**
@@ -22,32 +20,66 @@ public class HtmlFile {
         return file;
     }
 
+    /**
+     * Parse file, to format for needs of this app
+     * @param file HTML file
+     * @return formatted file
+     */
     private String[] parseFile(String[] file){
         ArrayList<String> parsedFile = new ArrayList<String>();
         for(String line : file){
             if(line.trim().length() != 0)
-                parsedFile.add(String.format("%d|%s", calculateNesting(line), line.trim()));
+                parsedFile.add(String.format("%d:%s", calculateNesting(line), line.trim()));
         }
         return parsedFile.toArray(new String[]{});
     }
 
     /**
      * Get content of pair element
-     * @param element signature of element (<p>, <a href=''>, etc.)
-     * @param attributes attributess
-     * @return
+     * @param element tag of element (<p>, <a href=''>, etc.) without brackets
+     * @param attributes attributes of element
+     * @return content of element
      */
-    private String[] getElement(String element, String attributes){
-        String file = this.file.toString();
-        String searchElement = String.format("<%s %s>", element, attributes);
-        ArrayList<String> elementList = new ArrayList<String>();
-        if(file.contains(searchElement)) {
-            int indexOfSearchingElement = file.indexOf(searchElement);
-          //  file = file.startsWith("<footer>");
+    public String[] getContentOfElement(String element, String attributes){
+        String searchElement;
+        if(!attributes.isEmpty())
+            searchElement = String.format("<%s %s>", element, attributes);
+        else
+            searchElement = String.format("<%s>", element);
+        int nestedElements = 0;
+        boolean elementFound = false;
+        ArrayList<String> contentOfElement = new ArrayList<String>();
+        for(String line : file){
+            if(!elementFound){
+                if(line.contains(searchElement)){
+                    String temp;
+                    elementFound = true;
+                    nestedElements = Integer.parseInt(line.split(":")[0]);
+                    temp = line.replace(String.format("%d:%s", nestedElements, searchElement), "");
+                    if(!temp.isEmpty()){
+                        if(temp.contains(String.format("</%s>", element))){
+                            temp = temp.replace(String.format("</%s>", element), "");
+                            contentOfElement.add(temp);
+                            break;
+                        }
+                    }
+                }
+            }else {
+                if(line.contains(String.format("%d:</%s>", nestedElements, element))){
+                    break;
+                }
+                contentOfElement.add(line.replace((line.split(":")[0] + ":"), ""));
+            }
         }
-        return null;
+        return contentOfElement.toArray(new String[]{});
     }
-    public int calculateNesting(String element){
+
+    /**
+     * Calculate nesting of element, by counting '\t' on line
+     * @param element element
+     * @return nesting
+     */
+    private int calculateNesting(String element){
         int nesting = 0;
         for(int i = 0; i < element.length(); i++){
             if(element.charAt(i) == '\t')

@@ -6,7 +6,8 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Created by Ondřej on 21. 1. 2015.
+ * Created by Ondřej Štorc on 21. 1. 2015.
+ * @author Ondřej Štorc
  */
 public class DataDownloader {
 
