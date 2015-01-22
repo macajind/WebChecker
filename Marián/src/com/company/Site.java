@@ -5,54 +5,56 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-
 import java.io.IOException;
 
-
+/**
+ *
+ * @author Marián
+ * @version 2.0
+ */
 public class Site {
 
-    private String url;
+    private final String url;
     private Document page;
+    private static final String CATEGORY = "Režie";
+    private static final String USER_AGENT = "Mozilla";
 
-    public Site(String url){
-
+    /**
+     *
+     * @param url
+     */
+    public Site(String url) {
         this.url = url;
-
     }
 
     /**
      * Connection to the web
-     *
      */
     public void openConnection() throws IOException {
-
-        page = Jsoup.connect(url).userAgent("Mozilla").get();
-
-
+        page = Jsoup.connect(url).userAgent(USER_AGENT).get();
     }
 
-    public void savePage() throws IOException {
-
+    /**
+     *
+     */
+    public void savePage() {
+        Boolean found = false;
         Elements creators = page.getElementsByClass("creators");
-        String director = "";
-        Element creator = null;
-
-        for (Element c : creators){
-            creator = c;
-        }
-
-            for (int i = 1; i < creators.size(); i++) {
-                if ((creator.select("h4:nth-child(" + i + ")").text()).equals("Réžie:")){
-                    director = creator.select("h4 ~ span a").text();
+        for (Element creator : creators) {
+            Elements categories = creator.getElementsByTag("div");
+            categories.remove(0); //class Elements count itself to selections run above it, if it matches to it
+            for (Element category : categories) {
+                if (category.getElementsByTag("h4").get(0).text().contains(CATEGORY)) {
+                    Elements directors = category.getElementsByTag("a");
+                    for (Element director : directors) {
+                        System.out.println(director.text());
+                        found = true;
+                    }
                 }
-                else{
-                    director = "Neznámy";
-                }
-
+            }
         }
-
-        System.out.println(creator);
-
-
+        if (!found) {
+            System.out.println("Neznámý");
+        }
     }
 }
