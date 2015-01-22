@@ -3,7 +3,6 @@ package com.company;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.MalformedInputException;
 import java.util.ArrayList;
 
 /**
@@ -12,6 +11,7 @@ import java.util.ArrayList;
 public class DataDownloader {
 
     /**
+     *
      * Download the file between defined lines in one string
      * @param address Address of text file on web
      * @param newLine Add new line after every download line

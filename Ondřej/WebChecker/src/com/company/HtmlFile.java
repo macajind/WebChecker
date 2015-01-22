@@ -31,6 +31,12 @@ public class HtmlFile {
         return parsedFile.toArray(new String[]{});
     }
 
+    /**
+     * Get content of pair element
+     * @param element signature of element (<p>, <a href=''>, etc.)
+     * @param attributes attributess
+     * @return
+     */
     private String[] getElement(String element, String attributes){
         String file = this.file.toString();
         String searchElement = String.format("<%s %s>", element, attributes);
