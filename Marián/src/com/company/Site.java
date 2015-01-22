@@ -1,25 +1,22 @@
 package com.company;
 
-import java.io.BufferedReader;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+
 
 public class Site {
 
-    private URL url;
+    private String url;
+    private Document page;
 
     public Site(String url){
 
-        try{
-            this.url = new URL(url);
-        }
-
-        catch (MalformedURLException e){
-            System.out.println("Url what you call, isn´t good");
-        }
+        this.url = url;
 
     }
 
@@ -27,33 +24,35 @@ public class Site {
      * Connection to the web
      *
      */
-    public void openConnection(){
+    public void openConnection() throws IOException {
 
-        try {
-            URLConnection myURLConnection = url.openConnection();
-            myURLConnection.connect();
-        }
-        catch (MalformedURLException e) {
-            System.out.println("Url what you call, isn´t good");
-        }
-        catch (IOException e) {
-            System.out.println("Url what you call, not exist");
-        }
+        page = Jsoup.connect(url).userAgent("Mozilla").get();
+
 
     }
 
-    public String savePage() throws IOException {
-        String line = "", all = "";
+    public void savePage() throws IOException {
 
-        BufferedReader in = null;
+        Elements creators = page.getElementsByClass("creators");
+        String director = "";
+        Element creator = null;
 
-        // Open page
-        in = new BufferedReader(new InputStreamReader(url.openStream()));
-
-        // Add line of text to the variable all
-        while ((line = in.readLine()) != null) {
-            all += line;
+        for (Element c : creators){
+            creator = c;
         }
-        return all;
+
+            for (int i = 1; i < creators.size(); i++) {
+                if ((creator.select("h4:nth-child(" + i + ")").text()).equals("Réžie:")){
+                    director = creator.select("h4 ~ span a").text();
+                }
+                else{
+                    director = "Neznámy";
+                }
+
+        }
+
+        System.out.println(creator);
+
+
     }
 }
