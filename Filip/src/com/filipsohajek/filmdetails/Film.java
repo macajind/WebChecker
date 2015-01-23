@@ -6,18 +6,39 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class Film {
+    /**
+     * Hashmap containing film names
+     */
     HashMap<String, String> names = new HashMap<String, String>();
 
+    /**
+     * Variable containing film's birthyear
+     */
     Year birthyear;
 
+    /**
+     * ArrayList containing film's genres
+     */
     ArrayList<String> genres = new ArrayList<String>();
 
+    /**
+     * Variable containing film's rating
+     */
     int rating;
 
+    /**
+     * Variable containing film's plot
+     */
     String plot;
 
+    /**
+     * Variable containing film's runtime
+     */
     int runtime;
 
+    /**
+     * Hashmap conaining film's authors
+     */
     HashMap<String, ArrayList<String>> authors = new HashMap<String, ArrayList<String>>();
 
     public Film()
