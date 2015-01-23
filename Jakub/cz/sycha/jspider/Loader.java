@@ -25,7 +25,7 @@ public class Loader {
     public String loadFromURL (String myURL) {
 
         // Uncomment this while debugging...
-        System.out.println("Requested URL: " + myURL);
+        //System.out.println("Requested URL: " + myURL);
 
         StringBuilder sb = new StringBuilder();
         URLConnection urlConn = null;
@@ -36,7 +36,7 @@ public class Loader {
             if (urlConn != null)
                 urlConn.setReadTimeout(60 * 1000);
             if (urlConn != null && urlConn.getInputStream() != null) {
-                in = new InputStreamReader(urlConn.getInputStream(), Charset.defaultCharset());
+                in = new InputStreamReader(urlConn.getInputStream(), "UTF-8");
                 BufferedReader bufferedReader = new BufferedReader(in);
                 if (bufferedReader != null) {
                     int cp;
