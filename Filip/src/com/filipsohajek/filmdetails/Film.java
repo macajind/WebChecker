@@ -9,37 +9,37 @@ public class Film {
     /**
      * Hashmap containing film names
      */
-    HashMap<String, String> names = new HashMap<String, String>();
+    private HashMap<String, String> names = new HashMap<String, String>();
 
     /**
      * Variable containing film's birthyear
      */
-    Year birthyear;
+    private Year birthyear;
 
     /**
      * ArrayList containing film's genres
      */
-    ArrayList<String> genres = new ArrayList<String>();
+    private ArrayList<String> genres = new ArrayList<String>();
 
     /**
      * Variable containing film's rating
      */
-    int rating;
+    private int rating;
 
     /**
      * Variable containing film's plot
      */
-    String plot;
+    private String plot;
 
     /**
      * Variable containing film's runtime
      */
-    int runtime;
+    private int runtime;
 
     /**
      * Hashmap conaining film's authors
      */
-    HashMap<String, ArrayList<String>> authors = new HashMap<String, ArrayList<String>>();
+    private HashMap<String, ArrayList<String>> authors = new HashMap<String, ArrayList<String>>();
 
     public Film()
     {
@@ -74,10 +74,6 @@ public class Film {
 
     public ArrayList<String> getGenres() {
         return genres;
-    }
-
-    public void setGenres(String[] genres) {
-        this.genres = new ArrayList<String>(Arrays.asList(genres));
     }
 
     public void appendGenre(String genre)

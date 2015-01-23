@@ -8,7 +8,6 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 public class FilmDetails {
     public static void main(String args[]) throws NoSuchMethodException, JSONException, FilmNotFoundException, IOException, ClassNotFoundException {

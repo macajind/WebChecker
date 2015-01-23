@@ -49,7 +49,7 @@ public class CsfdDatasource implements IDatasource {
             System.err.println("Unknown I/O error while reading response from server! Dying...");
         }
         String response = out.toString();
-        if (response == "[]")
+        if (response.equals("[]"))
         {
             throw new FilmNotFoundException("Cannot find film of this name!");
         }

@@ -2,7 +2,6 @@ package com.filipsohajek.filmdetails.renderers;
 
 import com.filipsohajek.filmdetails.Film;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,12 +12,12 @@ public class ConsoleRenderer implements IRenderer {
     /**
      * Hashmap containing translations of author array keys
      */
-    HashMap<String, String> authorlex = new HashMap<String, String>();
+    private HashMap<String, String> authorlex = new HashMap<String, String>();
 
     /**
      * Variable containing Film object
      */
-    Film film;
+    private Film film;
 
     /**
      * Constructor of class
@@ -27,7 +26,7 @@ public class ConsoleRenderer implements IRenderer {
 
     /**
      * Constructor of class. Accepts film as first parameter
-     * @param film
+     * @param film Film object to work with
      */
     public ConsoleRenderer(Film film)
     {
