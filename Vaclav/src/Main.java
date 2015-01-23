@@ -1,85 +1,43 @@
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
+import java.io.InputStreamReader;
 import java.net.URL;
 
-public class Main {
+/**
+ *
+ * @author Vaclav Kosak
+ * @version 1.0
+ */
+class Main {
 
+    private static final String URL = "http://www.imdb.com/title/tt2209764/?ref_=nv_sr_3";
+    private static final String CODING = "UTF-8";
+
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
-        URL u;
-        InputStream is = null;
-        DataInputStream dis;
-        String s;
-
+        BufferedReader reader = null;
         try {
-
-            //------------------------------------------------------------//
-            // Step 2:  Create the URL.                                   //
-            //------------------------------------------------------------//
-            // Note: Put your real URL here, or better yet, read it as a  //
-            // command-line arg, or read it from a file.                  //
-            //------------------------------------------------------------//
-
-            u = new URL("http://www.imdb.com/title/tt2209764/?ref_=nv_sr_3");
-
-            //----------------------------------------------//
-            // Step 3:  Open an input stream from the url.  //
-            //----------------------------------------------//
-
-            is = u.openStream();         // throws an IOException
-
-            //-------------------------------------------------------------//
-            // Step 4:                                                     //
-            //-------------------------------------------------------------//
-            // Convert the InputStream to a buffered DataInputStream.      //
-            // Buffering the stream makes the reading faster; the          //
-            // readLine() method of the DataInputStream makes the reading  //
-            // easier.                                                     //
-            //-------------------------------------------------------------//
-
-            dis = new DataInputStream(new BufferedInputStream(is));
-
-            //------------------------------------------------------------//
-            // Step 5:                                                    //
-            //------------------------------------------------------------//
-            // Now just read each record of the input stream, and print   //
-            // it out.  Note that it's assumed that this problem is run   //
-            // from a command-line, not from an application or applet.    //
-            //------------------------------------------------------------//
-
-            while ((s = dis.readLine()) != null) {
-                System.out.println(s);
+            URL url = new URL(URL);
+            reader = new BufferedReader(new InputStreamReader(url.openStream(), CODING));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
             }
-
-        } catch (MalformedURLException mue) {
-
-            System.out.println("Ouch - a MalformedURLException happened.");
-            mue.printStackTrace();
-            System.exit(1);
-
-        } catch (IOException ioe) {
-
-            System.out.println("Oops- an IOException happened.");
-            ioe.printStackTrace();
-            System.exit(1);
-
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
-
-            //---------------------------------//
-            // Step 6:  Close the InputStream  //
-            //---------------------------------//
-
             try {
-                is.close();
-            } catch (IOException ioe) {
-                // just going to ignore this one
+                if (reader != null) reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
         System.out.printf("Name: \n");
-        System.out.printf("Genres: \n" ); //zanr
+        System.out.printf("Genres: \n");
         System.out.printf("Release Date: \n");
         System.out.printf("Country: \n");
         System.out.printf("Runtime: \n");
