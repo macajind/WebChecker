@@ -1,13 +1,16 @@
 package com.filipsohajek.filmdetails;
 
 import java.time.Year;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class Film {
-    String[] names;
+    HashMap<String, String> names = new HashMap<String, String>();
 
     Year birthyear;
 
-    String genres[];
+    ArrayList<String> genres = new ArrayList<String>();
 
     int rating;
 
@@ -15,9 +18,14 @@ public class Film {
 
     int runtime;
 
-    String[][] authors;
+    HashMap<String, ArrayList<String>> authors = new HashMap<String, ArrayList<String>>();
 
-    public Film(String[] names, Year birthyear, String[] genres, int rating, String plot, int runtime, String[][] authors) {
+    public Film()
+    {
+
+    }
+
+    public Film(HashMap<String, String> names, Year birthyear, ArrayList<String> genres, int rating, String plot, int runtime, HashMap<String, ArrayList<String>> authors) {
         this.names = names;
         this.birthyear = birthyear;
         this.genres = genres;
@@ -27,12 +35,12 @@ public class Film {
         this.authors = authors;
     }
 
-    public String[] getNames() {
+    public HashMap<String, String> getNames() {
         return names;
     }
 
-    public void setNames(String[] names) {
-        this.names = names;
+    public void appendName(String name, String lang) {
+        this.names.put(lang, name);
     }
 
     public Year getBirthyear() {
@@ -43,12 +51,17 @@ public class Film {
         this.birthyear = birthyear;
     }
 
-    public String[] getGenres() {
+    public ArrayList<String> getGenres() {
         return genres;
     }
 
     public void setGenres(String[] genres) {
-        this.genres = genres;
+        this.genres = new ArrayList<String>(Arrays.asList(genres));
+    }
+
+    public void appendGenre(String genre)
+    {
+        genres.add(genre);
     }
 
     public int getRating() {
@@ -75,11 +88,11 @@ public class Film {
         this.runtime = runtime;
     }
 
-    public String[][] getAuthors() {
+    public HashMap<String, ArrayList<String>> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(String[][] authors) {
-        this.authors = authors;
+    public void appendAuthor(String role, String[] names) {
+        this.authors.put(role, new ArrayList<String>(Arrays.asList(names)));
     }
 }
