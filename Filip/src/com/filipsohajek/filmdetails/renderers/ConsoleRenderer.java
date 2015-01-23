@@ -14,6 +14,8 @@ public class ConsoleRenderer implements IRenderer {
 
     Film film;
 
+    public ConsoleRenderer() {}
+    
     public ConsoleRenderer(Film film)
     {
         this.film = film;

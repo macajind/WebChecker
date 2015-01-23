@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class CsfdDatasource implements IDatasource {
+    public CsfdDatasource() {}
     @Override
     public Film getFilmByName(String name) throws IOException, FilmNotFoundException, JSONException {
         URL url = new URL("http://csfdapi.cz/movie?search=" + name.replace(" ", "+"));
