@@ -1,40 +1,41 @@
 package com.company;
 
-public class Main {
+import java.util.ArrayList;
 
+/**
+ *
+ * @author Ondřej Štorc
+ * @version 2.0
+ */
+class Main {
+
+    private static final String URL = "http://www.csfd.cz/film/2292-zelena-mile/";
+    private static final String META = "meta";
+    private static final String CONTENT = "content";
+    private static final String PARAGRAPH = "p";
+
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
-	    // Download file
-        //HtmlFile htmlFile = new HtmlFile(DataDownloader.downloadTextFile("http://www.csfd.cz/film/2294-vykoupeni-z-veznice-shawshank/"));
-        HtmlFile htmlFile = new HtmlFile(DataDownloader.downloadTextFile("http://www.csfd.cz/film/2292-zelena-mile/"));
-        // Write out file
-        System.out.println("Name: \t\t\t" + htmlFile.getContentOfAttribute("meta", "property=\"og:title\"", "content"));
+        HtmlFile htmlFile = new HtmlFile(DataDownloader.downloadTextFile(URL)); // Download file
+        //Write out file
+        System.out.println("Name: \t\t\t" + htmlFile.getContentOfAttribute(META, "property=\"og:title\"", CONTENT));
         System.out.print("Origin: \t\t");
-        writeOutStringArray(htmlFile.getContentOfElement("p", "class=\"origin\""));
+        writeOutStringArray(htmlFile.getContentOfElement(PARAGRAPH, "class=\"origin\""));
         System.out.print("Genre: \t\t\t");
-        writeOutStringArray(htmlFile.getContentOfElement("p", "class=\"genre\""));
-        System.out.println("Description:\n\t  " + htmlFile.getContentOfAttribute("meta", "name=\"description\"", "content").replace(".", ".\n\t"));
-        //region Method testing
-        /*    // Get content of inline element <a href="... /a>
-            String[] test1 = htmlFile.getContentOfElement("a", "href=\"/zebricky/nejlepsi-filmy/?show=complete#highlight-chart-2294\"");
-            // Get content of element <div class="... /div>
-            String[] test2 = htmlFile.getContentOfElement("div", "class=\"ct-related similar\"");
-            writeOutStringArray(test1);
-            System.out.println("\n");
-            writeOutStringArray(test2);
-            System.out.println("\n");
-            // Get content of content attribute
-            System.out.println(htmlFile.getContentOfAttribute("meta", "name=\"keywords\"", "content"));
-            // Get content of class attribute
-            System.out.println(htmlFile.getContentOfAttribute("a", "href=\"/film/289469-alcatraz/\"", "class"));*/
-        //endregion
+        writeOutStringArray(htmlFile.getContentOfElement(PARAGRAPH, "class=\"genre\""));
+        System.out.println("Description:\n\t  " + htmlFile.getContentOfAttribute(META, "name=\"description\"", CONTENT).replace(".", ".\n\t"));
     }
 
     /**
-     * Write out content of array
-     * Just for testing
-     * @param array String array
+     * Write out content of array.
+     * What happens, when array is null?
+     *
+     * @param array {@link String} array - very comprehensive
      */
-    private static void writeOutStringArray(String[] array){
-        for(String s : array) System.out.println(s);
+    private static void writeOutStringArray(ArrayList<String> array) {
+        array.forEach(System.out::println);
     }
 }
