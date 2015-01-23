@@ -18,6 +18,15 @@ import java.util.Iterator;
 
 public class CsfdDatasource implements IDatasource {
     public CsfdDatasource() {}
+
+    /**
+     * Get Film object by its name
+     * @param name Name of film
+     * @return Film
+     * @throws IOException
+     * @throws FilmNotFoundException
+     * @throws JSONException
+     */
     @Override
     public Film getFilmByName(String name) throws IOException, FilmNotFoundException, JSONException {
         URL url = new URL("http://csfdapi.cz/movie?search=" + name.replace(" ", "+"));
@@ -49,6 +58,13 @@ public class CsfdDatasource implements IDatasource {
         return getFilmById(String.valueOf(obj.getJSONObject(0).getInt("id")));
     }
 
+    /**
+     * Get Film object by its ID
+     * @param id ID of film in specifed database
+     * @return Film
+     * @throws IOException
+     * @throws JSONException
+     */
     @Override
     public Film getFilmById(String id) throws IOException, JSONException {
         Film film = new Film();

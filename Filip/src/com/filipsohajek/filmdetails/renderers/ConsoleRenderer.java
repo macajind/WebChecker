@@ -10,12 +10,25 @@ import java.util.Map;
 
 public class ConsoleRenderer implements IRenderer {
 
+    /**
+     * Hashmap containing translations of author array keys
+     */
     HashMap<String, String> authorlex = new HashMap<String, String>();
 
+    /**
+     * Variable containing Film object
+     */
     Film film;
 
+    /**
+     * Constructor of class
+     */
     public ConsoleRenderer() {}
-    
+
+    /**
+     * Constructor of class. Accepts film as first parameter
+     * @param film
+     */
     public ConsoleRenderer(Film film)
     {
         this.film = film;
@@ -27,6 +40,9 @@ public class ConsoleRenderer implements IRenderer {
         authorlex.put("actors", "Herci");
     }
 
+    /**
+     * Render complete film details
+     */
     @Override
     public void renderFilm() {
         renderNames();
@@ -38,12 +54,18 @@ public class ConsoleRenderer implements IRenderer {
         renderAuthors();
     }
 
+    /**
+     * Render film's birth year
+     */
     @Override
     public void renderBirth() {
         System.out.println("Rok vydání : " + film.getBirthyear().toString() + "\n");
         System.out.println();
     }
 
+    /**
+     * Render film's names
+     */
     @Override
     public void renderNames() {
         HashMap<String, String> names = film.getNames();
@@ -56,12 +78,18 @@ public class ConsoleRenderer implements IRenderer {
         System.out.println();
     }
 
+    /**
+     * Render film's plot
+     */
     @Override
     public void renderPlot() {
         System.out.println(film.getPlot());
         System.out.println();
     }
 
+    /**
+     * Render film's genres
+     */
     @Override
     public void renderGenres() {
         System.out.println("Žánry : ");
@@ -73,18 +101,27 @@ public class ConsoleRenderer implements IRenderer {
         System.out.println();
     }
 
+    /**
+     * Render film's rating
+     */
     @Override
     public void renderRating() {
         System.out.println("Hodnocení : " + String.valueOf(film.getRating()));
         System.out.println();
     }
 
+    /**
+     * Render film's runtime
+     */
     @Override
     public void renderRuntime() {
         System.out.println("Délka : " + String.valueOf(film.getRuntime()));
         System.out.println();
     }
 
+    /**
+     * Render film's authors
+     */
     @Override
     public void renderAuthors() {
         HashMap<String, ArrayList<String>> authors = film.getAuthors();
