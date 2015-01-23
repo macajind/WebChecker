@@ -1,0 +1,11 @@
+FilmDetails
+===========
+
+Compiling the app
+*****************
+
+Recommended way to compile this application is using ant build file in this directory.
+Ant will download all depedencies and compile the app.
+Otherwise you must download these two JARs manually.
+JARs used here are Apache commons CLI and org.json.
+
