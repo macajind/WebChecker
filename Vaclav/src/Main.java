@@ -22,34 +22,39 @@ class Main {
      */
     public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in, CODING);
+
+        //select of movie
         System.out.println("Select Film (imdb.com):");
         String urlString = sc.nextLine();
 
         Document doc = Jsoup.connect(urlString).get();
+
+        //Element in html, which will be searched
         String selectorPagecontent = "div#pagecontent";
         Element contributions = doc.select(selectorPagecontent).first();
         Elements selectedDivs = contributions.select(selectorPagecontent);
 
-
-        String selectorName = "h1 span";
-        String selectorGenres = "div.infobar a:gt(0)";
-        String selectorGenres2 = "div.infobar a:gt(2)";
-        String selectorDate = "span.nobr a";
-        String selectorTime = "div.txt-block time";
-        String selectorStory = "div.canwrap p";
+        //selected html code locates a sequential listing
         for (Element div : selectedDivs) {
-            Element name = div.select(selectorName).first();
-            Element genres = div.select(selectorGenres).first();
-            Element genres2 = div.select(selectorGenres2).first();
-            Element date = div.select(selectorDate).first();
-            Element time = div.select(selectorTime).first();
-            Element story = div.select(selectorStory).first();
+            Element name = div.select("h1 span").first();
+            Element genres = div.select("div.infobar a:gt(0)").first();
+            Element genres2 = div.select("div.infobar a:gt(2)").first();
+            Element date = div.select("span.nobr a").first();
+            Element time = div.select("div.txt-block time").first();
+            Element story = div.select("div.canwrap p").first();
+            Elements photos = doc.select("div.combined-see-more a[href]");
+            Elements videos = doc.select("div.combined-see-more a:gt(2)[href]");
             System.out.println("=====================================");
             System.out.printf("Name: %s \n", name.text());
             System.out.printf("Genres: %s, %s \n", genres.text(), genres2.text());
             System.out.printf("Release date: %s \n", date.text());
             System.out.printf("Runtime: %s\n", time.text());
             System.out.printf("Storyline: %s \n", story.text());
+            System.out.printf("Photos: ");
+            System.out.println(photos.attr("abs:href"));
+            System.out.printf("Videos: ");
+            System.out.println(videos.attr("abs:href"));
+
         }
     }
 }
