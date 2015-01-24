@@ -6,19 +6,40 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class Film {
-    HashMap<String, String> names = new HashMap<String, String>();
+    /**
+     * Hashmap containing film names
+     */
+    private HashMap<String, String> names = new HashMap<String, String>();
 
-    Year birthyear;
+    /**
+     * Variable containing film's birthyear
+     */
+    private Year birthyear;
 
-    ArrayList<String> genres = new ArrayList<String>();
+    /**
+     * ArrayList containing film's genres
+     */
+    private ArrayList<String> genres = new ArrayList<String>();
 
-    int rating;
+    /**
+     * Variable containing film's rating
+     */
+    private int rating;
 
-    String plot;
+    /**
+     * Variable containing film's plot
+     */
+    private String plot;
 
-    int runtime;
+    /**
+     * Variable containing film's runtime
+     */
+    private int runtime;
 
-    HashMap<String, ArrayList<String>> authors = new HashMap<String, ArrayList<String>>();
+    /**
+     * Hashmap conaining film's authors
+     */
+    private HashMap<String, ArrayList<String>> authors = new HashMap<String, ArrayList<String>>();
 
     public Film()
     {
@@ -53,10 +74,6 @@ public class Film {
 
     public ArrayList<String> getGenres() {
         return genres;
-    }
-
-    public void setGenres(String[] genres) {
-        this.genres = new ArrayList<String>(Arrays.asList(genres));
     }
 
     public void appendGenre(String genre)

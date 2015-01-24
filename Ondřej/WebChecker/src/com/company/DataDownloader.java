@@ -8,20 +8,25 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
+ * Class used to download files from the Web. The class uses HTTP to retrieve data
  *
  * @author Ondřej Štorc
  * @version 2.0
  */
 class DataDownloader {
-
+    /**
+     * This constant declares what encoding is used to obtain data. Value of this constant is {@value}
+     */
     private static final String CODING = "UTF-8";
 
     /**
-     * Download the file between defined lines, where every new line is on her own {@link String}.
-     * What happens when any of the parameters is empty or null?
+     * Downloads text file from the Internet and stores it in the {@link ArrayList}, where each new line will be stored in the new part of the {@link ArrayList}.
      *
-     * @param address Address of file
-     * @return Downloaded text file - very comprehensive
+     * What happens when any of the parameters is empty or null?
+     *  Application will print MalformedURLException stack trace {@link java.net.MalformedURLException}
+     *
+     * @param address Address of file with http://
+     * @return text file at specific address
      */
     public static ArrayList<String> downloadTextFile(String address) {
         ArrayList<String> result = new ArrayList<>();
