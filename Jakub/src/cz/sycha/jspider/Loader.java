@@ -4,10 +4,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
 
 /**
- * This class is used for loading of online files into variables...
+ * This class is used for loading of online files into variables
  *
  * @author Jacob Sycha <jakubsycha@gmail.com>
  * @version 1.0
@@ -17,21 +16,21 @@ public class Loader {
 
     /**
      *
-     * Fetches the specified URL as a string, this suitable only for text files like TXT's, XML and JSON, HTML Pages etc...
+     * Fetches the specified URL as a string, this suitable only for text files like TXT's, XML and JSON, HTML Pages etc.
      *
-     * @param myURL Url you want to fetch from.
+     * @param URL Url you want to fetch from.
      * @return The fetched content in String format.
      */
-    public String loadFromURL (String myURL) {
+    public String loadFromURL (String URL) {
 
         // Uncomment this while debugging...
-        //System.out.println("Requested URL: " + myURL);
+        //System.out.println("Requested URL: " + URL);
 
         StringBuilder sb = new StringBuilder();
-        URLConnection urlConn = null;
+        URLConnection urlConn;
         InputStreamReader in = null;
         try {
-            URL url = new URL(myURL);
+            URL url = new URL(URL);
             urlConn = url.openConnection();
             if (urlConn != null)
                 urlConn.setReadTimeout(60 * 1000);
@@ -48,7 +47,7 @@ public class Loader {
             in.close();
         }
         catch (Exception e) {
-            throw new RuntimeException("Exception while trying to fetch from URL: "+ myURL, e);
+            throw new RuntimeException("Exception while trying to fetch from URL: "+ URL, e);
         }  		return sb.toString();
     }
 }

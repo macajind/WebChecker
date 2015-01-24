@@ -8,11 +8,11 @@ public class Main {
         // Set the right locale (just to be sure...)
         Locale.setDefault(new Locale("cs_CZ"));
 
-        // RUn the init function...
-        new Main().init();
+        new Interface();
     }
 
     public void init() {
-        new Parser().getMovie("http://www.fdb.cz/film/hon-jagten/91831");
+        //new Parser().getMovie("http://www.fdb.cz/film/hon-jagten/91831");
+        //new Parser().search("hon");
     }
 }
