@@ -2,17 +2,18 @@ package cz.sycha.jspider;
 
 import java.util.Locale;
 
+/**
+ * Main class of teh jSpider app, we basically just set the right locale and start the app there
+ */
 public class Main {
 
+    /**
+     * Main method of the app, as said, we just set the right locale there and create the Interface class
+     *
+     * @param args This method takes no arguments!
+     */
     public static void main(String[] args) {
-        // Set the right locale (just to be sure...)
-        Locale.setDefault(new Locale("cs_CZ"));
-
-        new Interface();
-    }
-
-    public void init() {
-        //new Parser().getMovie("http://www.fdb.cz/film/hon-jagten/91831");
-        //new Parser().search("hon");
+        Locale.setDefault(new Locale("cs_CZ")); // Set the right locale (just to be sure...)
+        new Interface(); // Start the app...
     }
 }

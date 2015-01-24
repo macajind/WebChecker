@@ -19,6 +19,7 @@ public class Parser {
 
     /**
      * Get the URL info from specified URL and print it out in a console
+     *
      * @param URL Name of the URL...
      */
     public void getMovie(String URL) {
@@ -50,7 +51,7 @@ public class Parser {
 
     /**
      * Search for a movie using the specified name/keywords and return a list of found movies with respective ID's
-     * THIS IS BUGGY AS HELL!
+     * Please use with care, may be buggy!
      *
      * @param query what you want to search for
      */
