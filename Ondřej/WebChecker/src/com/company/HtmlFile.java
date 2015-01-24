@@ -5,18 +5,17 @@ import java.util.stream.Collectors;
 
 /**
  * This class stores and works with HTML elements
+ *
  * @author Ondřej Štorc
  * @version 2.0
  */
 class HtmlFile {
-    /*
-     * This variable stores data with which this instance works
-     */
+
     private final ArrayList<String> file;
 
     /**
      * Constructs a HtmlFile with the file.
-     * @param file stores data with which will this instance operate
+     * @param file data with which will this instance operate
      */
     public HtmlFile(ArrayList<String> file) {
         this.file = parseFile(file);
@@ -24,8 +23,7 @@ class HtmlFile {
 
     /**
      * Parse file, to format for needs of this app.
-     * What happens when file is null?
-     *  Application will print NullPointerException stack trace {@link NullPointerException}
+     * If parameter is null, application will print {@link NullPointerException} stack trace.
      *
      * @param file which is formatted as uncompressed HTML file (This means that each element is on a new line and if it is nested, it is indented using the tab)
      * @return a formatted array, where each row is stored in a format:  nesting:data
@@ -36,11 +34,13 @@ class HtmlFile {
 
     /**
      * Get content of pair element.
-     * What happens when any of parameters is null or empty?
-     *  If is any of parameters 'null', then the application will print NullPointerException stack trace {@link NullPointerException}
-     *  If the first parameter is empty or null, then the application will return empty array
-     *  If the second parameter is empty or null, then the application will attempt to find the same element
-     * @param element tag of the element (<p>, <a href=''>, etc.) without brackets
+     * <ul>
+     *  <li>If is any of parameters 'null', then the application will print {@link NullPointerException} stack trace.</li>
+     *  <li>If the first parameter is empty or null, then the application will return an empty array</li>
+     *  <li>If the second parameter is empty or null, then the application will attempt to find the matching element</li>
+     * </ul>
+     *
+     * @param element tag of the element ({@literal <p>}, {@literal <a href=''>}, etc.) without brackets.
      * @param attributes of the element you are looking for
      * @return content of element
      */
@@ -78,12 +78,12 @@ class HtmlFile {
 
     /**
      * Get content of element's attribute.
-     * What happens when any of parameters is null or empty?
-     *  Method will return null
-     * @param element tag of element (<p>, <a href=''>, etc.) without brackets
+     * When any of parameters is null or empty, method will return null
+     *
+     * @param element tag of element ({@literal <p>}, {@literal <a href=''>}, etc.) without brackets.
      * @param uniqueAttribute unique attribute, used to identify the element
      * @param dataAttribute from which attribute you want to get data
-     * @return data of an attribute - very comprehensive
+     * @return data of an attribute
      */
     public String getContentOfAttribute(String element, String uniqueAttribute, String dataAttribute) {
         String searchElement = String.format("<%s %s %s=", element, uniqueAttribute, dataAttribute);
@@ -99,8 +99,8 @@ class HtmlFile {
 
     /**
      * Calculate nesting of line, by counting '\t' on line.
-     * What happens when line is null?
-     *  Application will print NullPointerException stack trace {@link NullPointerException}
+     * When parameter is null application will print {@link NullPointerException} stack trace
+     *
      * @param line for which you want to know how much is element nested, which is located on this line.
      * @return nesting level
      */
