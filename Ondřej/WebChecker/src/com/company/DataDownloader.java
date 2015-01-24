@@ -14,16 +14,12 @@ import java.util.ArrayList;
  * @version 2.0
  */
 class DataDownloader {
-    /**
-     * This constant declares what encoding is used to obtain data. Value of this constant is {@value}
-     */
+
     private static final String CODING = "UTF-8";
 
     /**
      * Downloads text file from the Internet and stores it in the {@link ArrayList}, where each new line will be stored in the new part of the {@link ArrayList}.
-     *
-     * What happens when any of the parameters is empty or null?
-     *  Application will print MalformedURLException stack trace {@link java.net.MalformedURLException}
+     * When any of the parameters is empty or null, application will print {@link java.net.MalformedURLException} stack trace
      *
      * @param address Address of file with http://
      * @return text file at specific address
