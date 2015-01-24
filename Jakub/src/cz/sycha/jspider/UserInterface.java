@@ -48,9 +48,14 @@ public class UserInterface {
 
         int input = sc.nextInt();
 
-        String URL = ps.searchResults[input].replace("./", "");
-        URL = "http://www.fdb.cz/" + URL;
+        if(ps.searchResults[input] == null) {
+            System.out.println("Zadejte prosím platné číslo filmu ze seznamu!");
+        }
+        else {
+            String URL = ps.searchResults[input].replace("./", "");
+            URL = "http://www.fdb.cz/" + URL;
 
-        ps.getMovie(URL);
+            ps.getMovie(URL);
+        }
     }
 }
