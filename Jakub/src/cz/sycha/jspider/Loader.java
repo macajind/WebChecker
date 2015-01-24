@@ -15,7 +15,6 @@ import java.net.URLConnection;
 public class Loader {
 
     /**
-     *
      * Fetches the specified URL as a string, this suitable only for text files like TXT's, XML and JSON, HTML Pages etc.
      *
      * @param URL Url you want to fetch from.

@@ -3,12 +3,13 @@ package cz.sycha.jspider;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
 /**
  * This class is used for parsing various requests like displaying a movie or searching
  *
- * @author Jakub Sycha <jakubsycha@gmail.com>
+ * @author Jacob Sycha <jakubsycha@gmail.com>
  * @version 1.0
  */
 
@@ -26,10 +27,18 @@ public class Parser {
         String html = this.loader.loadFromURL(URL);
         Document doc = Jsoup.parse(html);
 
+        /*
+         * Here, we parse all the elements and get text from them. If the element is missing, we
+         * create one and give it some default text. It looks fugly, but who cares right?
+         */
         Element title = doc.select("div.zakladni_info > div.left > h1 > a").first();
+        if(title == null) title = new Element(Tag.valueOf("p"), "/").text("Neznámý");
         Element origTitle = doc.select("div.text > div.infotext > h2.title_next").first();
+        if(origTitle == null) origTitle = new Element(Tag.valueOf("p"), "/").text("Neznámý");
         Elements meta = doc.select("div.text > div.infotext > div.row");
+        if(meta == null) meta = new Elements(0);
         Element plot = doc.select("#zbytek").first();
+        if(plot == null) plot = new Element(Tag.valueOf("p"), "/").text("Neznámý");
 
         System.out.println("Český název: " + title.ownText());
         System.out.println("Originální název: " + origTitle.ownText());
