@@ -8,7 +8,7 @@ import java.util.Scanner;
  * @author Jacob Sycha <jakubsycha@gmail.com>
  * @version 1.0
  */
-public class UserInterface {
+class UserInterface {
 
     private final Scanner sc = new Scanner(System.in);
     private final Parser ps = new Parser();

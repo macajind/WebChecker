@@ -8,7 +8,7 @@ import java.util.Locale;
  * @author Jacob Sycha <jakubsycha@gmail.com>
  * @version 1.0
  */
-public class Main {
+class Main {
 
     /**
      * Main method of the app, as said, we just set the right locale there and create the UserInterface class

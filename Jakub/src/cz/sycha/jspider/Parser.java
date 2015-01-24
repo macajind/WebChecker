@@ -12,8 +12,7 @@ import org.jsoup.select.Elements;
  * @author Jacob Sycha <jakubsycha@gmail.com>
  * @version 1.0
  */
-
-public class Parser {
+class Parser {
 
     private final Loader loader = new Loader();
     public final String[] searchResults = new String[64];
