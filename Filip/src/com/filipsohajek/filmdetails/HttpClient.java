@@ -15,7 +15,7 @@ public class HttpClient {
 
     /**
      * A class constructor. Accepts java.net.URL as first parameter. Throws java.io.IOException on error.
-     * @param url
+     * @param url URL to download
      */
     public HttpClient(URL url) throws IOException {
             connection = (HttpURLConnection) url.openConnection();
@@ -32,9 +32,9 @@ public class HttpClient {
 
     /**
      * Method to get connection input stream. Throws java.io.IOException on error.
-     * @return
+     * @return InputStream InputStream of connection
      */
-    public InputStream getInputStream() throws IOException {
+    InputStream getInputStream() throws IOException {
             return connection.getInputStream();
     }
 

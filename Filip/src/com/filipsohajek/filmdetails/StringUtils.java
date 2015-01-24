@@ -4,8 +4,8 @@ public class StringUtils {
     public static String concat(String... pieces)
     {
         StringBuilder result = new StringBuilder();
-        for (int i = 0; i < pieces.length; i++) {
-            result.append(pieces[i]);
+        for (String piece : pieces) {
+            result.append(piece);
         }
         return result.toString();
     }
