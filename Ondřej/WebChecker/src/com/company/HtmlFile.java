@@ -15,6 +15,7 @@ class HtmlFile {
 
     /**
      * Constructs a HtmlFile with the file.
+     *
      * @param file data with which will this instance operate
      */
     public HtmlFile(ArrayList<String> file) {
