@@ -6,33 +6,29 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Main {
+/**
+ *
+ * @author Vaclav Kosak
+ * @version 2.0
+ */
+class Main {
+
+    private static final String CODING = "UTF-8";
 
     /**
      *
-     * @author Vaclav Kosak
-     * @version 2.0
+     * @param args
+     * @throws IOException
      */
-
     public static void main(String[] args) throws IOException {
-        Scanner sc = new Scanner(System.in, "UTF-8");
+        Scanner sc = new Scanner(System.in, CODING);
         System.out.println("Select Film (imdb.com):");
-
-        String urlString;
-        urlString = sc.nextLine();
-
+        String urlString = sc.nextLine();
 
         Document doc = Jsoup.connect(urlString).get();
-
         String selectorPagecontent = "div#pagecontent";
-        String selectorPagecontents = "div#pagecontent";
-
         Element contributions = doc.select(selectorPagecontent).first();
-
         Elements selectedDivs = contributions.select(selectorPagecontent);
-        for (Element div : selectedDivs) {
-            //System.out.println(div);
-        }
 
         String selectorName = "h1 span";
         String selectorGenres = "div.infobar a, div.infobar a ";
