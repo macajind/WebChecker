@@ -1,49 +1,56 @@
-import java.io.BufferedReader;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
+import java.util.Scanner;
 
-/**
- *
- * @author Vaclav Kosak
- * @version 1.0
- */
-class Main {
-
-    private static final String URL = "http://www.imdb.com/title/tt2209764/?ref_=nv_sr_3";
-    private static final String CODING = "UTF-8";
+public class Main {
 
     /**
      *
-     * @param args
+     * @author Vaclav Kosak
+     * @version 2.0
      */
-    public static void main(String[] args) {
-        BufferedReader reader = null;
-        try {
-            URL url = new URL(URL);
-            reader = new BufferedReader(new InputStreamReader(url.openStream(), CODING));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (reader != null) reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+    public static void main(String[] args) throws IOException {
+        Scanner sc = new Scanner(System.in, "UTF-8");
+        System.out.println("Select Film (imdb.com):");
+
+        String urlString;
+        urlString = sc.nextLine();
+
+
+        Document doc = Jsoup.connect(urlString).get();
+
+        String selectorPagecontent = "div#pagecontent";
+        String selectorPagecontents = "div#pagecontent";
+
+        Element contributions = doc.select(selectorPagecontent).first();
+
+        Elements selectedDivs = contributions.select(selectorPagecontent);
+        for (Element div : selectedDivs) {
+            //System.out.println(div);
         }
 
-        System.out.printf("Name: \n");
-        System.out.printf("Genres: \n");
-        System.out.printf("Release Date: \n");
-        System.out.printf("Country: \n");
-        System.out.printf("Runtime: \n");
-        System.out.printf("Storyline: \n");
-        System.out.printf("Ratings: \n");
-        System.out.printf("Videos: \n");
-        System.out.printf("Photos \n");
+        String selectorName = "h1 span";
+        String selectorGenres = "div.infobar a, div.infobar a ";
+        String selectorDate = "span.nobr a";
+        String selectorTime = "div.txt-block time";
+        String selectorStory = "div.canwrap p";
+        for (Element div : selectedDivs) {
+            Element name = div.select(selectorName).first();
+            Element genres = div.select(selectorGenres).first();
+            Element date = div.select(selectorDate).first();
+            Element time = div.select(selectorTime).first();
+            Element story = div.select(selectorStory).first();
+            System.out.println("=====================================");
+            System.out.printf("Name: %s \n", name.text());
+            System.out.printf("Genres: %s \n", genres.text());
+            System.out.printf("Release date: %s \n", date.text());
+            System.out.printf("Runtime: %s\n", time.text());
+            System.out.printf("Storyline: %s \n", story.text());
+        }
     }
 }
