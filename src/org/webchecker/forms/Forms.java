@@ -89,6 +89,6 @@ public final class Forms {
      * Support method for verification of form element.
      */
     private Boolean isElementForm(Element element) {
-        return element.tagName() == "form";
+        return element.tagName().equals("form");
     }
 }
