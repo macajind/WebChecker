@@ -1,8 +1,11 @@
 package org.webchecker.forms;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -39,9 +42,11 @@ public final class Forms {
     /**
      * Should create {@link Document} instance from given url parameter and open it.
      *
-     * @param url
+     * @param url of page which you want to open
+     * @throws IOException in case of bad format url
      */
-    public void openDocument(URL url) {
+    public void openDocument(URL url) throws IOException {
+        document = Jsoup.connect(url.toString()).get();
     }
 
     /**
@@ -63,15 +68,20 @@ public final class Forms {
 
     /**
      * Should select form element by identifier from currently opened page/document and return it.
-     * What happens when document is null?
-     * What happens when no element is found?
-     * What happens if found element is not form?
-     * What happens when it finds more then 1 element, which match the identifier?
+     * When document is null application will throw {@link java.lang.NullPointerException}
+     * When application doesn't found any element, application will return {@literal null}
+     * When found element is not form, application will try found another matching element, but if at page isn't any matching element application return {@literal null}
+     * When on the page is more then one elements with same identifier, application will select first matching form element
      *
-     * @param identifier
-     * @return
+     * @param identifier is CSS selector {@link String}. For more information's about CSS selectors visit this <a href='http://www.w3schools.com/cssref/css_selectors.asp'>page</a>
+     * @return new instance of {@link Form}, which contains elements of found form and url page of {@link Document}
      */
-    public Form selectForm(String identifier) {
+    public Form selectForm(String identifier) throws MalformedURLException {
+        for(Element element : document.select(identifier)) {
+            if (isElementForm(element)) {
+                return new Form(element, new URL(document.baseUri()));
+            }
+        }
         return null;
     }
 
@@ -79,6 +89,6 @@ public final class Forms {
      * Support method for verification of form element.
      */
     private Boolean isElementForm(Element element) {
-        return false;
+        return element.tagName() == "form";
     }
 }
