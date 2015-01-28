@@ -56,7 +56,7 @@ public class Form {
      * @param location is {@link URL} of file from which application download {@link Document}
      * @param action is absolute or relative address. This address is one of attributes of HTML form
      */
-    private void setAction(URL location, String action){
+    public void setAction(URL location, String action){
         try {
             this.action = new URL(location, action);
         } catch (MalformedURLException e) {

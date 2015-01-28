@@ -67,6 +67,12 @@ public final class Forms {
     }
 
     /**
+     * Get current {@link Document}
+     * @return Current {@link Document}
+     */
+    public Document getDocument() { return this.document; }
+
+    /**
      * Should select form element by identifier from currently opened page/document and return it.
      * When document is null application will throw {@link java.lang.NullPointerException}
      * When application doesn't found any element, application will return {@literal null}
