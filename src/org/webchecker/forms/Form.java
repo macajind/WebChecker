@@ -47,11 +47,14 @@ public class Form {
                 radioInputs.add(input);
             }
         }
-        processRadioInputs(radioInputs);
+        inputs.add(processRadioInputs(radioInputs));
     }
 
     /**
      * Support method for creating full path url of action.
+     *
+     * @param location is {@link URL} of file from which application download {@link Document}
+     * @param action is absolute or relative address. This address is one of attributes of HTML form
      */
     private void setAction(URL location, String action){
         try {
@@ -63,6 +66,9 @@ public class Form {
 
     /**
      * Support method for dealing with radio inputs, because of theirs possibility to have same name.
+     *
+     * @param inputs with type radio
+     * @return radio input which have attribute 'checked'
      */
     private Input processRadioInputs(Elements inputs) {
         if(inputs == null) return null;
