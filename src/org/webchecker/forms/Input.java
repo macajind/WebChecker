@@ -4,7 +4,7 @@ package org.webchecker.forms;
  * HTML form input element.
  * Only considers name, value and type attributes of HTML input element.
  *
- * @author Tunik
+ * @author Jindřich Máca (Tuník)
  * @version 1.0
  */
 public class Input {

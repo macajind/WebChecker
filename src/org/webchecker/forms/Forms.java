@@ -15,8 +15,8 @@ import java.net.URL;
  * So in the end, you can have prepared any number of {@link Form}s you like,
  * even from different web pages, and manipulate them as you please.
  *
- * @author Tunik
  * @author Filip Sohajek <filip.sohajek@gmail.com>
+ * @author Jindřich Máca (Tuník)
  * @version 1.0
  */
 public final class Forms {

@@ -4,7 +4,7 @@ package org.webchecker.forms;
  * Supported {@link Input} types.
  * It is also used to verify if the type of HTML input element is supported.
  *
- * @author Tunik
+ * @author Jindřich Máca (Tuník)
  * @version 1.0
  */
 public enum Type {
