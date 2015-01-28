@@ -19,6 +19,7 @@ import java.util.HashMap;
  * and {@link Form#send} either by {@link Method#GET} or {@link Method#POST} method.
  *
  * @author Tunik
+ * @author Filip Sohajek <filip.sohajek@gmail.com>
  * @version 1.0
  */
 public class Form {

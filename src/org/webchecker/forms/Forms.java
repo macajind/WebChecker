@@ -16,6 +16,7 @@ import java.net.URL;
  * even from different web pages, and manipulate them as you please.
  *
  * @author Tunik
+ * @author Filip Sohajek <filip.sohajek@gmail.com>
  * @version 1.0
  */
 public final class Forms {

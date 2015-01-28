@@ -10,6 +10,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ * Form class test
+ * @version 1.0
+ * @author Filip Sohajek <filip.sohajek@gmail.com>
+ */
 public class FormTest {
 
     Form form;

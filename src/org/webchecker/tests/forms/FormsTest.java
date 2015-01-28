@@ -13,6 +13,11 @@ import java.net.MalformedURLException;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Forms class test
+ * @version 1.0
+ * @author Filip Sohajek <filip.sohajek@gmail.com>
+ */
 public class FormsTest {
 
     Forms formsinst;
