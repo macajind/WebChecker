@@ -1,9 +1,14 @@
 package org.webchecker.forms;
 
+import org.jsoup.Connection;
+import org.jsoup.Connection.Method;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,22 +31,45 @@ public class Form {
      * Construct all inner structure of the form. Its inputs, action and method.
      * Includes only inputs of known types and inputs with names!
      *
-     * @param formElement
-     * @param location
+     * @param formElement is HTML element extracted from document
+     * @param location is {@link URL}
      */
     public Form(Element formElement, URL location) {
+        setAction(location, formElement.attr("action"));
+        method = Method.valueOf(formElement.attr("method"));
+
+        Elements radioInputs = new Elements();
+        inputs.add(processRadioInputs(formElement.getElementsByTag("input[type=\"radio\"]")));
+        for (Element input : formElement.getElementsByTag("input")) {
+            if (!input.attr("type").equals("radio") && Type.containsType(input.attr("type"))) {
+                inputs.add(new Input(input.attr("name"), Type.valueOf(input.attr("type")), input.attr("value")));
+            }else if (Type.containsType(input.attr("type"))){
+                radioInputs.add(input);
+            }
+        }
+        processRadioInputs(radioInputs);
     }
 
     /**
      * Support method for creating full path url of action.
      */
-    private void setAction(URL location, String action) {
+    private void setAction(URL location, String action){
+        try {
+            this.action = new URL(location, action);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Support method for dealing with radio inputs, because of theirs possibility to have same name.
      */
     private Input processRadioInputs(Elements inputs) {
+        if(inputs == null) return null;
+        for (Element input : inputs){
+            if(input.hasAttr("checked"))
+                return new Input(input.attr("name"), Type.RADIO, input.attr("checked"));
+        }
         return null;
     }
 
@@ -67,47 +95,30 @@ public class Form {
      */
     public void fill(HashMap<String, String> inputsValues) {
         for (Input input : this.inputs) {
-            if (inputsValues.containsKey(input.getName())) input.setValue(inputsValues.get(input.getName()));
+            if (inputsValues.containsKey(input.getName()))
+                input.setValue(inputsValues.get(input.getName()));
         }
     }
 
     /**
      * Send {@link Form} in current filled/part-filled/not filled state to his {@link Form#action} url address.
      * Sending proceeds different depending on {@link Form#method}, which can be {@link Method#GET} or {@link Method#POST}.
+     * When sending fail in some way or response status code is different from 200, application wil return {@link null}
      *
      * @return response page in form of {@link Document}
      */
     public Document send() {
-        switch (this.method) {
-            case GET:
-                return sendGET();
-            case POST:
-                return sendPOST();
-            default:
-                throw new IllegalStateException("Application should never throw this exception.");
+        HashMap<String, String> inputsMap = new HashMap<>();
+        inputs.forEach(input -> inputsMap.put(input.getName(), input.getValue()));
+
+        try {
+            Connection.Response response = Jsoup.connect(action.getPath()).data(inputsMap).method(method).execute();
+            if(response.statusCode() == 200)
+                return response.parse();
+            return null;
+        } catch (IOException e) {
+            return null;
         }
-    }
-
-    /**
-     * Should send form by GET method.
-     * Must build its request format.
-     * What happens when request fails in some way or return another HTTP code then 200?
-     *
-     * @return
-     */
-    Document sendGET() {
-        return null;
-    }
-
-    /**
-     * Should send form by POST method.
-     * Must build its request format.
-     * What happens when request fails in some way or return another HTTP code then 200?
-     *
-     * @return
-     */
-    Document sendPOST() {
-        return null;
     }
 
     /**
