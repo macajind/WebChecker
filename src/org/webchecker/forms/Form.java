@@ -25,7 +25,7 @@ public class Form {
 
     private URL action;
     private Method method;
-    private ArrayList<Input> inputs;
+    private ArrayList<Input> inputs = new ArrayList<Input>();
 
     /**
      * Construct all inner structure of the form. Its inputs, action and method.
@@ -36,18 +36,27 @@ public class Form {
      */
     public Form(Element formElement, URL location) {
         setAction(location, formElement.attr("action"));
-        method = Method.valueOf(formElement.attr("method"));
+        String methodstr = formElement.attr("method");
+        method = Method.valueOf(methodstr.equals("") ? "GET" : methodstr.toUpperCase());
 
         Elements radioInputs = new Elements();
-        inputs.add(processRadioInputs(formElement.getElementsByTag("input[type=\"radio\"]")));
+        Input radioinput = processRadioInputs(formElement.getElementsByTag("input[type=\"radio\"]"));
+        if (radioinput == null) {}
+        else {inputs.add(radioinput);}
+
         for (Element input : formElement.getElementsByTag("input")) {
             if (!input.attr("type").equals("radio") && Type.containsType(input.attr("type"))) {
-                inputs.add(new Input(input.attr("name"), Type.valueOf(input.attr("type")), input.attr("value")));
+                String name = input.attr("name");
+                Type type = Type.valueOf(input.attr("type").toUpperCase());
+                String value = (input.attr("value") == null) ? "" : input.attr("value");
+                inputs.add(new Input(name, type, value));
             }else if (Type.containsType(input.attr("type"))){
                 radioInputs.add(input);
             }
         }
-        inputs.add(processRadioInputs(radioInputs));
+        Input radioinputs = processRadioInputs(radioInputs);
+        if (radioinputs == null) {}
+        else {inputs.add(radioinputs);}
     }
 
     /**
