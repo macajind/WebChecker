@@ -18,6 +18,7 @@ import java.util.HashMap;
  * Allows user to fill in form {@link Input}s of supported {@link Type}s
  * and {@link Form#send} either by {@link Method#GET} or {@link Method#POST} method.
  *
+ * @author Ondřej Štorc <o.storc@outlook.com>
  * @author Filip Sohajek <filip.sohajek@gmail.com>
  * @author Jindřich Máca (Tuník)
  * @version 1.0
