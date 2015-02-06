@@ -15,29 +15,27 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Forms class test
- * @version 1.0
+ *
  * @author Filip Sohajek <filip.sohajek@gmail.com>
+ * @version 1.0
  */
 public class FormsTest {
 
-    Forms formsinst;
-
-    Form form;
+    private final Forms formsInstance;
 
     public FormsTest() throws IOException {
-        formsinst = Forms.getInstance();
-        formsinst.openDocument(Jsoup.parse(new File("src/org/webchecker/tests/forms/testdocument.html"), "UTF-8", "http://localhost"));
+        formsInstance = Forms.getInstance();
+        formsInstance.openDocument(Jsoup.parse(new File("src/org/webchecker/tests/forms/test.html"), "UTF-8", "http://localhost"));
     }
 
     @Test
     public void testDocumentRetrieve() throws IOException {
-        assertThat(formsinst.getDocument(), instanceOf(Document.class));
+        assertThat(formsInstance.getDocument(), instanceOf(Document.class));
     }
 
     @Test
     public void testFormRetr() throws MalformedURLException {
-        form = formsinst.selectForm("form");
+        Form form = formsInstance.selectForm("form");
         assertThat(form, instanceOf(Form.class));
     }
-
 }
