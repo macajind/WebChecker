@@ -1,6 +1,9 @@
 package org.webchecker.forms;
 
 /**
+ * HTML form input element with type checkbox.
+ * Extends from {@link Input}, but differs itself by considering also default value of input element.
+ *
  * @author Jindřich Máca (Tuník)
  * @version 1.0
  */
@@ -9,46 +12,42 @@ public class CheckboxInput extends Input {
     private final String defaultValue;
 
     /**
-     * Constructor that leaves the {@link Input#value} set to {@code null}, that means,
-     * this input won't be {@link Form#send}. Other then known {@link Type}s of {@link
-     * Input} should not be constructed, so parameter type can not be {@code null}.
-     * Parameter name can not be empty or {@code null}, because {@link Form} doesn't
-     * create such {@link Input}s.
+     * Calls default {@link Input#Input(String, Type)} constructor, but also sets this {@link CheckboxInput#defaultValue}.
      *
-     * @param name         {@link String} name of the {@link Input}
-     * @param type         {@link Type} of the {@link Input}
-     * @param defaultValue
+     * @param name         {@link String} name of the {@link CheckboxInput}
+     * @param defaultValue {@link String} default value of the {@link CheckboxInput}
      */
-    public CheckboxInput(String name, Type type, String defaultValue) {
-        super(name, type);
+    public CheckboxInput(String name, String defaultValue) {
+        super(name, Type.CHECKBOX);
         this.defaultValue = defaultValue;
     }
 
     /**
-     * Constructor that sets all {@link Input} attributes and by this, makes it ready
-     * to be {@link Form#send}. Other then known {@link Type}s of {@link Input} should
-     * not be constructed, so parameter {@link Input#Input#type} can not be {@code
-     * null}. {@link Input#Input#name} can not be empty or {@code null}. If {@link
-     * Input#Input#value} is {@code null}, this input won't be {@link Form#send}.
+     * Calls default {@link Input#Input(String, Type, String)} constructor, but also sets this {@link CheckboxInput#defaultValue}.
      *
-     * @param name         {@link String} name of the {@link Input}
-     * @param type         {@link Type} of the {@link Input}
-     * @param value        {@link String} value of the {@link Input}
-     * @param defaultValue
+     * @param name         {@link String} name of the {@link CheckboxInput}
+     * @param value        {@link String} value of the {@link CheckboxInput}
+     * @param defaultValue {@link String} default value of the {@link CheckboxInput}
      */
-    public CheckboxInput(String name, Type type, String value, String defaultValue) {
-        super(name, type, value);
+    public CheckboxInput(String name, String value, String defaultValue) {
+        super(name, Type.CHECKBOX, value);
         this.defaultValue = defaultValue;
     }
 
+    /**
+     * Getter for the {@link CheckboxInput#defaultValue}.
+     *
+     * @return {@link CheckboxInput#defaultValue} of this {@link CheckboxInput}
+     */
     public String getDefaultValue() {
         return defaultValue;
     }
 
     /**
-     * Sets default value of the {@link CheckboxInput}.
+     * Sets the default value to the {@link CheckboxInput}.
+     * If the default value is {@code null}, then this {@link CheckboxInput} won't be {@link Form#send} after calling this method.
      */
-    public void setValue() {
+    public void setDefaultValue() {
         this.setValue(this.defaultValue);
     }
 }
