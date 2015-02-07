@@ -1,9 +1,7 @@
-package org.webchecker.tests.forms;
+package org.webchecker.forms;
 
 import org.jsoup.Jsoup;
 import org.junit.Test;
-import org.webchecker.forms.Form;
-import org.webchecker.forms.Forms;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +22,7 @@ public class FormTest {
     public FormTest() throws IOException {
         Forms formsInstance = Forms.getInstance();
         System.out.println(System.getProperty("user.dir"));
-        formsInstance.openDocument(Jsoup.parse(new File("src/org/webchecker/tests/forms/test.html"), "UTF-8", "http://localhost"));
+        formsInstance.openDocument(Jsoup.parse(new File("tests/org/webchecker/forms/test.html"), "UTF-8", "http://localhost"));
         form = formsInstance.selectForm("form");
     }
 

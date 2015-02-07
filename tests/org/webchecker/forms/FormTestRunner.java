@@ -1,4 +1,4 @@
-package org.webchecker.tests.forms;
+package org.webchecker.forms;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
