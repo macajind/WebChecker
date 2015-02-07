@@ -26,68 +26,81 @@ import java.util.HashMap;
 public class Form {
 
     private URL action;
-    private Method method;
-    private ArrayList<Input> inputs = new ArrayList<Input>();
+    private final Method method;
+    private final ArrayList<Input> inputs = new ArrayList<>();
 
     /**
      * Construct all inner structure of the form. Its inputs, action and method.
      * Includes only inputs of known types and inputs with names!
      *
      * @param formElement is HTML element extracted from document
-     * @param location is {@link URL}
+     * @param location    is {@link URL}
      */
     public Form(Element formElement, URL location) {
-        setAction(location, formElement.attr("action"));
-        String methodstr = formElement.attr("method");
-        method = Method.valueOf(methodstr.equals("") ? "GET" : methodstr.toUpperCase());
+        //Setting action
+        setAction(location, formElement.attr("action").trim());
 
-        Elements radioInputs = new Elements();
-        Input radioinput = processRadioInputs(formElement.getElementsByTag("input[type=\"radio\"]"));
-        if (radioinput == null) {}
-        else {inputs.add(radioinput);}
+        //Setting method
+        String method = formElement.attr("method");
+        this.method = Method.valueOf(method.equals("") ? "GET" : method.trim().toUpperCase());
 
-        for (Element input : formElement.getElementsByTag("input")) {
-            if (!input.attr("type").equals("radio") && Type.containsType(input.attr("type"))) {
-                String name = input.attr("name");
-                Type type = Type.valueOf(input.attr("type").toUpperCase());
-                String value = (input.attr("value") == null) ? "" : input.attr("value");
-                inputs.add(new Input(name, type, value));
-            }else if (Type.containsType(input.attr("type"))){
-                radioInputs.add(input);
+        //Extracting inputs
+        Elements inputs = formElement.getElementsByTag("input");
+        Elements inputsToSkip = new Elements();
+        for (Element input : inputs) {
+            if (inputsToSkip.contains(input)) continue;
+            if (Type.containsType(input.attr("type"))) {
+                String name = input.attr("name").trim();
+                Type type = Type.valueOf(input.attr("type").trim().toUpperCase());
+                String value = input.attr("value").trim();
+                switch (type) {
+                    case CHECKBOX:
+                        this.inputs.add(input.hasAttr("checked") ? new CheckboxInput(name, value, value) : new CheckboxInput(name, value));
+                        break;
+                    case RADIO:
+                        Elements radioInputs = inputs.select("[type=\"" + Type.RADIO.getType() + "\"][name=\"" + name + "\"]");
+                        this.inputs.add(this.processRadioInputs(name, radioInputs));
+                        inputsToSkip.addAll(radioInputs);
+                        break;
+                    default:
+                        this.inputs.add(new Input(name, type, value));
+                }
             }
         }
-        Input radioinputs = processRadioInputs(radioInputs);
-        if (radioinputs == null) {}
-        else {inputs.add(radioinputs);}
+    }
+
+    /**
+     * Support method for dealing with radio inputs, because of theirs possibility to have same name and more values.
+     *
+     * @param name        name of the list of radio inputs
+     * @param radioInputs list of radio inputs
+     * @return {@link RadioInput} properly build from list of radio inputs
+     */
+    private RadioInput processRadioInputs(String name, Elements radioInputs) {
+        ArrayList<String> defaultValues = new ArrayList<>();
+        String value = null;
+        for (Element radioInput : radioInputs) {
+            String defaultValue = radioInput.attr("value").trim();
+            if (radioInput.hasAttr("checked")) {
+                value = defaultValue;
+            }
+            defaultValues.add(defaultValue);
+        }
+        return value == null ? new RadioInput(name, defaultValues) : new RadioInput(name, value, defaultValues);
     }
 
     /**
      * Support method for creating full path url of action.
      *
      * @param location is {@link URL} of file from which application download {@link Document}
-     * @param action is absolute or relative address. This address is one of attributes of HTML form
+     * @param action   is absolute or relative address; this address is one of attributes of HTML form
      */
-    public void setAction(URL location, String action){
+    private void setAction(URL location, String action) {
         try {
             this.action = new URL(location, action);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Support method for dealing with radio inputs, because of theirs possibility to have same name.
-     *
-     * @param inputs with type radio
-     * @return radio input which have attribute 'checked'
-     */
-    private Input processRadioInputs(Elements inputs) {
-        if(inputs == null) return null;
-        for (Element input : inputs){
-            if(input.hasAttr("checked"))
-                return new Input(input.attr("name"), Type.RADIO, input.attr("checked"));
-        }
-        return null;
     }
 
     /**
@@ -111,10 +124,7 @@ public class Form {
      * @param inputsValues collection of pairs, where first item represents {@link Input#name} and second one represents {@link Input#value}
      */
     public void fill(HashMap<String, String> inputsValues) {
-        for (Input input : this.inputs) {
-            if (inputsValues.containsKey(input.getName()))
-                input.setValue(inputsValues.get(input.getName()));
-        }
+        this.inputs.stream().filter(input -> inputsValues.containsKey(input.getName())).forEach(input -> input.setValue(inputsValues.get(input.getName())));
     }
 
     /**
@@ -123,19 +133,15 @@ public class Form {
      * When sending fail in some way or response status code is different from 200, application wil return {@link null}
      *
      * @return response page in form of {@link Document}
+     * @throws java.io.IOException if sending of the form fails or it returns HTTP respond code other then 200
      */
-    public Document send() {
+    public Document send() throws IOException {
         HashMap<String, String> inputsMap = new HashMap<>();
         inputs.forEach(input -> inputsMap.put(input.getName(), input.getValue()));
 
-        try {
-            Connection.Response response = Jsoup.connect(action.getPath()).data(inputsMap).method(method).execute();
-            if(response.statusCode() == 200)
-                return response.parse();
-            return null;
-        } catch (IOException e) {
-            return null;
-        }
+        Connection.Response response = Jsoup.connect(action.getPath()).data(inputsMap).method(method).execute();
+        if (response.statusCode() == 200) return response.parse();
+        else throw new IOException(response.statusMessage());
     }
 
     /**

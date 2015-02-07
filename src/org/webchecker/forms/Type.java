@@ -34,7 +34,7 @@ public enum Type {
      */
     public static Boolean containsType(String testType) {
         for (Type type : Type.values()) {
-            if (type.getType().equals(testType)) return true;
+            if (type.getType().equals(testType.trim().toLowerCase())) return true;
         }
         return false;
     }
