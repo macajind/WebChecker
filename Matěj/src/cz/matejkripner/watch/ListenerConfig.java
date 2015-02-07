@@ -24,7 +24,8 @@ public class ListenerConfig {
     public ListenerConfig autoCheckingOn(int delay) {
         validateDelay(delay);
         autoChecking = delay;
-        onAutoCheckingChange.accept(0, delay);
+        if(onAutoCheckingChange != null)
+            onAutoCheckingChange.accept(0, delay);
         return this;
     }
 

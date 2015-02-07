@@ -18,6 +18,8 @@ public class Listener {
 
     private ListenerConfig config;
 
+    private Document lastChangeDocument;
+
     private Listener() {
         config(null);
     }
@@ -66,6 +68,14 @@ public class Listener {
         if(action() == null || changed() == null || supplyElement() == null) {
             throw new BadFilledException("Action, changed and element in each listener has to be filled");
         }
+    }
+
+    Document getLastChangeDocument() {
+        return lastChangeDocument;
+    }
+
+    void setLastChangeDocument(Document lastChangeDocument) {
+        this.lastChangeDocument = lastChangeDocument;
     }
 
     public static class BadFilledException extends RuntimeException {

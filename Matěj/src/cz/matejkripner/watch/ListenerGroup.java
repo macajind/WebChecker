@@ -13,14 +13,9 @@ import java.util.function.Supplier;
  * @version 1.0
  */
 public class ListenerGroup {
-    private static final LinkedList<ListenerGroup> GROUPS;
     private static final long DEFAULT_MAX_REFRESHING_DELAY = 1000 * 60 * 5;
-    static {
-        GROUPS = new LinkedList<>();
-    }
     public static ListenerGroup newGroup(Supplier<Document> getDocument, long maxRefreshingDelay) {
         ListenerGroup group = new ListenerGroup(getDocument, maxRefreshingDelay);
-        GROUPS.add(group);
         return group;
     }
     public static ListenerGroup newGroup(Supplier<Document> getDocument) {
@@ -28,7 +23,7 @@ public class ListenerGroup {
     }
 
     private final LinkedList<Listener> listeners;
-    private Supplier<Document> toWork;
+    private final Supplier<Document> toWork;
 
     private final Worker worker;
 
@@ -48,8 +43,12 @@ public class ListenerGroup {
         worker = new Worker(delaySupplier);
         worker.start();
     }
-    public void addListener(Listener l) {
-        listeners.add(configure(l));
+    public synchronized void addListener(Listener l) {
+        configure(l);
+        listeners.add(l);
+        if(l.config().autoCheckingOn()) {
+            worker.addToAutoRefreshing(l);
+        }
         synchronized (worker) {
             worker.notify();
         }
@@ -87,12 +86,9 @@ public class ListenerGroup {
             l.action().accept(oldElementToListen, newElementToListen);
         }
     }
-    private void updateListenersConfig() { // may useless
-        // TODO
-    }
 
     private class Worker extends Thread {
-        private Function<Worker, Integer> delay;
+        private final Function<Worker, Integer> delay;
         private final LinkedList<ListenerTime> autoRefreshings;
 
         private Document oldDoc;
@@ -124,8 +120,8 @@ public class ListenerGroup {
                 System.out.println("worker's loop");
                 synchronized (this) {
                     if (!autoRefreshings.isEmpty()) {
+                        System.out.println("worker working");
                         work();
-                        updateListenersConfig();
                     } else {
                         waitUntilListenersEmpty();
                     }

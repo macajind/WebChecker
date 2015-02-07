@@ -26,7 +26,7 @@ public class Main {
                 .element(d -> d.select("p").first())
                 .changed((oldElement, newElement) -> !newElement.text().equals(oldElement.text()))
                 .action((oldElement, newElement) -> System.out.println("zmena z " + oldElement + " na " + newElement))
-                // .config(ListenerConfig.defaults().autoCheckingOn(500))
+                .config(ListenerConfig.defaults().autoCheckingOn(5000))
                 .register(g);
         Listener
                 .listener()
