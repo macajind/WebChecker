@@ -9,30 +9,91 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
+ * Class represents a group of listeners. The rule of listeners grouping is that one group has only one source
+ * document to work on. This is the only thing connecting listeners in one group and each listener can (has to)
+ * have his own configuration.
+ * If listener wants to listen, he has to be in one or more groups.
+ * This group contains mechanism for auto listening and refreshing the source document and for explicit listening called
+ * by user.
+ * If you want to create a group, you have to specify a supplier able to supply fresh version of document. In this case,
+ * the supplier is represent by {@link java.util.function.Supplier} functional interface.
+ * Each listener contains the max age of document, that can be regarded as a fresh. If this parameter is not specify
+ * in constructor, the default value will be used.
+ *
  * @author Matěj Kripner
  * @version 1.0
+ * @see #toWork
+ * @see #listeners
+ * @see #maxRefreshingDelay
+ * @see #DEFAULT_MAX_REFRESHING_DELAY
+ * @see Worker
  */
 public class ListenerGroup {
 
     private static final long DEFAULT_MAX_REFRESHING_DELAY = 1000 * 60 * 5;
 
+    /**
+     * Returns a new group with given document supplier and max refreshing delay. Both arguments has to be valid. This
+     * means, that {@code getDocument != null && maxRefreshingDelay >= ListenerConfig.MIN_AUTO_CHECKING} has to return
+     * true.
+     *
+     * @param getDocument        The document supplier for the new group
+     * @param maxRefreshingDelay The max age of document, that can be int the new group regarded as a fresh
+     * @return The new listener group with given parameters
+     * @see #ListenerGroup(java.util.function.Supplier, long)
+     * @see #newGroup(java.util.function.Supplier)
+     * @see ListenerGroup
+     */
     public static ListenerGroup newGroup(Supplier<Document> getDocument, long maxRefreshingDelay) {
+        if (getDocument == null) throw new IllegalArgumentException("Document supplier can not be null");
+        if (maxRefreshingDelay < ListenerConfig.MIN_AUTO_CHECKING)
+            throw new IllegalArgumentException("Max refresh delay can not be less than " + ListenerConfig.MIN_AUTO_CHECKING + ", but was " + maxRefreshingDelay);
         return new ListenerGroup(getDocument, maxRefreshingDelay);
     }
 
+    /**
+     * This factory method do the same as {@link #newGroup(java.util.function.Supplier, long)}, but fill the
+     * {@link #maxRefreshingDelay} with default value
+     *
+     * @param getDocument The document supplier for the new group
+     * @return The new listener group with given parameters
+     * @see #ListenerGroup(java.util.function.Supplier, long)
+     * @see ListenerGroup
+     * @see #DEFAULT_MAX_REFRESHING_DELAY
+     */
     public static ListenerGroup newGroup(Supplier<Document> getDocument) {
         return newGroup(getDocument, DEFAULT_MAX_REFRESHING_DELAY);
     }
 
+    /**
+     * The list of listeners of this group. Can not be null
+     */
     private final LinkedList<Listener> listeners;
+    /**
+     * The supplier of document, which the listeners will work on
+     */
     private final Supplier<Document> toWork;
     private final Worker worker;
+    /**
+     * The max age of document, that can be in this group regarded as a fresh
+     */
     private final long maxRefreshingDelay;
 
+    /**
+     * The constructor, that in fact do the same as {@link #ListenerGroup(java.util.function.Supplier, java.util.LinkedList, long)}
+     *
+     * @param toWork             The document supplier for the new group
+     * @param maxRefreshingDelay The max age of document, that can be int the new group regarded as a fresh
+     */
     private ListenerGroup(Supplier<Document> toWork, long maxRefreshingDelay) {
         this(toWork, new LinkedList<>(), maxRefreshingDelay);
     }
 
+    /**
+     * @param toWork
+     * @param iniListeners
+     * @param maxRefreshingDelay
+     */
     private ListenerGroup(Supplier<Document> toWork, LinkedList<Listener> iniListeners, long maxRefreshingDelay) {
         listeners = iniListeners;
         this.toWork = toWork;
@@ -44,6 +105,9 @@ public class ListenerGroup {
         worker.start();
     }
 
+    /**
+     *
+     */
     private void iniListeners() {
         listeners.stream().forEach(this::configure);
     }
@@ -88,7 +152,6 @@ public class ListenerGroup {
     }
 
     private void applyListening(Listener l) {
-        System.out.println("applyListening(" + l + ")");
         Element newElementToListen = l.supplyElement().apply(worker.getLastDoc());
         Element oldElementToListen = l.supplyElement().apply(l.getLastChangeDocument());
 
@@ -127,10 +190,8 @@ public class ListenerGroup {
         @Override
         public void run() {
             while (!interrupted()) {
-                System.out.println("worker's loop");
                 synchronized (this) {
                     if (!autoRefreshing.isEmpty()) {
-                        System.out.println("worker working");
                         work();
                     } else {
                         waitUntilListenersEmpty();
