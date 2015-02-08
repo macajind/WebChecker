@@ -13,9 +13,9 @@ import java.util.function.BiConsumer;
  */
 public class ListenerConfig {
     /**
-     * Default value of {@link #autoChecking}. Has to be positive.
+     * Min value of {@link #autoChecking}. Has to be positive.
      */
-    private static final int MIN_AUTO_CHECKING = 25;
+    public static final int MIN_AUTO_CHECKING = 25;
 
     /**
      * Represents the preferred delay between two listening of the listener. If the value is 0,
