@@ -1,4 +1,4 @@
-package org.webchecker.watch;
+package org.webchecker.watcher;
 
 import java.util.function.BiConsumer;
 

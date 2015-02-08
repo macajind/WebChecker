@@ -1,4 +1,4 @@
-package org.webchecker.watch;
+package org.webchecker.watcher;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
