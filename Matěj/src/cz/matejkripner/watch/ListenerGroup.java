@@ -36,12 +36,16 @@ public class ListenerGroup {
         listeners = iniListeners;
         this.toWork = toWork;
         this.maxRefreshingDelay = maxRefreshingDelay;
+        iniListeners();
         Function<Worker, Integer> delaySupplier = w -> w.autoRefreshings.stream() // supply the minimum of all listener's delays
                 .mapToInt(lt -> lt.listener.config().autoChecking())
                 .min()
                 .getAsInt();
         worker = new Worker(delaySupplier);
         worker.start();
+    }
+    private void iniListeners() {
+        listeners.stream().forEach(this::configure);
     }
     public synchronized void addListener(Listener l) {
         configure(l);
@@ -54,6 +58,11 @@ public class ListenerGroup {
         }
     }
     private Listener configure(Listener l) {
+        if(l.getLastChangeDocument() == null) {
+            if(worker.getLastDoc() == null)
+                refresh();
+            l.setLastChangeDocument(worker.getLastDoc());
+        }
         l.config().setOnAutoCheckingChange((oldValue, newValue) -> {
             if(newValue > 0) {
                 worker.addToAutoRefreshing(l);
@@ -79,11 +88,12 @@ public class ListenerGroup {
 
     private void applyListening(Listener l) {
         System.out.println("applyListening(" + l + ")");
-        Element newElementToListen = l.supplyElement().apply(worker.getNewestDoc());
-        Element oldElementToListen = l.supplyElement().apply(worker.getOldDoc());
+        Element newElementToListen = l.supplyElement().apply(worker.getLastDoc());
+        Element oldElementToListen = l.supplyElement().apply(l.getLastChangeDocument());
 
         if(l.changed().test(oldElementToListen, newElementToListen)) {
             l.action().accept(oldElementToListen, newElementToListen);
+            l.setLastChangeDocument(worker.getLastDoc());
         }
     }
 
@@ -91,13 +101,11 @@ public class ListenerGroup {
         private final Function<Worker, Integer> delay;
         private final LinkedList<ListenerTime> autoRefreshings;
 
-        private Document oldDoc;
-        private Document newestDoc;
+        private Document lastDoc;
 
         public Worker(Function<Worker, Integer> delay) {
             this.delay = delay;
             autoRefreshings = new LinkedList<>();
-            refreshDocs(); // not a mistake, need to fill oldDoc and newestDoc
             refreshDocs();
 //            setDaemon(true); // TODO: uncomment
         }
@@ -145,23 +153,19 @@ public class ListenerGroup {
             refreshDocs();
         }
 
-        private long lastDocsRefresh; {
+        private long lastDocsRefresh;
+        {
             lastDocsRefresh = 0;
         }
         public long getLastDocsRefresh() {
             return lastDocsRefresh;
         }
         private synchronized void refreshDocs() {
-            oldDoc = newestDoc;
-            newestDoc = toWork.get();
+            lastDoc = toWork.get();
             lastDocsRefresh = System.currentTimeMillis();
         }
-        public synchronized Document getNewestDoc() {
-            return newestDoc;
-        }
-
-        public synchronized Document getOldDoc() {
-            return oldDoc;
+        public synchronized Document getLastDoc() {
+            return lastDoc;
         }
 
         private void waitUntilListenersEmpty() {
