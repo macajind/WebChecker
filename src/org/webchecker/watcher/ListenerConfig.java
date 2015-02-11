@@ -5,7 +5,7 @@ import java.util.function.BiConsumer;
 /**
  * Class represents a configuration of a listener. It contains only one parameter yet, but can be
  * easily extend. There is no rule of number of listeners to one config, but one listener have to have
- * one config.
+ * exact one config.
  *
  * @author Matěj Kripner
  * @version 1.0

@@ -80,7 +80,8 @@ public class ListenerGroup {
     private final long maxRefreshingDelay;
 
     /**
-     * The constructor, that in fact do the same as {@link #ListenerGroup(java.util.function.Supplier, java.util.LinkedList, long)}
+     * The constructor, that in fact do the same as {@link #ListenerGroup(java.util.function.Supplier, java.util.LinkedList, long)},
+     * but do not create any listeners
      *
      * @param toWork             The document supplier for the new group
      * @param maxRefreshingDelay The max age of document, that can be int the new group regarded as a fresh
@@ -90,9 +91,12 @@ public class ListenerGroup {
     }
 
     /**
-     * @param toWork
-     * @param iniListeners
-     * @param maxRefreshingDelay
+     * The main constructor, that initialize class fields with given values, initialize given listeners and start the
+     * {@link org.webchecker.watcher.ListenerGroup.Worker} object
+     *
+     * @param toWork The document supplier for the new group
+     * @param iniListeners A list of listeners that will be used as a list for listeners saving
+     * @param maxRefreshingDelay The max age of document, that can be int the new group regarded as a fresh
      */
     private ListenerGroup(Supplier<Document> toWork, LinkedList<Listener> iniListeners, long maxRefreshingDelay) {
         listeners = iniListeners;
@@ -106,12 +110,26 @@ public class ListenerGroup {
     }
 
     /**
-     *
+     * Initialize all listeners in {@link #listeners} list. In fact do the same as the code:
+     * {@code
+     * for(Listener listener : listeners) {
+     *     configure(listener);
+     * }
+     * }
+     * As you can see, the initializing of each listener is done by {@link #configure(Listener)} method
      */
     private void iniListeners() {
         listeners.stream().forEach(this::configure);
     }
 
+    /**
+     * Configure the given listener and add it to the {@link #listeners} list. If autoChecking of the listener
+     * is on, add it to {@link #worker}'s list to apply auto listening
+     *
+     * @param l A listener to be added. If null, {@link java.lang.NullPointerException} will be thrown
+     * @see #listeners
+     * @see #worker
+     */
     public synchronized void addListener(Listener l) {
         configure(l);
         listeners.add(l);
@@ -123,9 +141,15 @@ public class ListenerGroup {
         }
     }
 
+    /**
+     * Configure and return given listener. A listener is ready for future using after
+     * configuring by this method
+     * @param l The listener to configure
+     * @return Given listener after configuring
+     */
     private Listener configure(Listener l) {
-        if (l.getLastChangeDocument() == null) {
-            if (worker.getLastDoc() == null) refresh();
+        if (l.getLastChangeDocument() == null) { // listener was not yet use and there is no last version of a document
+            if (worker.getLastDoc() == null) refresh(); // worker was not yet use and (his refresh method was not yet called)
             l.setLastChangeDocument(worker.getLastDoc());
         }
         l.config().setOnAutoCheckingChange((oldValue, newValue) -> {
@@ -136,48 +160,101 @@ public class ListenerGroup {
         return l;
     }
 
+    /**
+     * Do the same as {@link #check(java.util.function.Predicate)} method, but apply listening to all listeners
+     */
     public void check() {
         check(l -> true);
     }
 
+    /**
+     * Apply listening to listeners, that return true for given predicate. If the last version of loaded document
+     * is not fresh enough, refresh it by {@link #refresh()} method. A document is fresh enough when delay between
+     * his loading time and now is less than {@link #maxRefreshingDelay} value.
+     * @param update This function has to determine, if we should apply listening to a listener
+     */
     public synchronized void check(Predicate<Listener> update) {
-        if (System.currentTimeMillis() - worker.getLastDocsRefresh() > maxRefreshingDelay) {
+        if (System.currentTimeMillis() - worker.getLastDocRefresh() > maxRefreshingDelay) {
             refresh();
         }
         listeners.stream().filter(update).forEach(this::applyListening);
     }
 
+    /**
+     * Refresh a document the group is working on
+     */
     public synchronized void refresh() {
-        worker.refreshDocs();
+        worker.refreshDoc();
     }
 
+    /**
+     * Apply listening to given listener.
+     * @param l Listener to apply listening. If null, {@link java.lang.NullPointerException} is thrown
+     */
     private void applyListening(Listener l) {
-        Element newElementToListen = l.supplyElement().apply(worker.getLastDoc());
-        Element oldElementToListen = l.supplyElement().apply(l.getLastChangeDocument());
+        Element newElementToListen = l.supplyElement().apply(worker.getLastDoc()); // new element to compare with his old version
+        Element oldElementToListen = l.supplyElement().apply(l.getLastChangeDocument()); // old element to compare
 
-        if (l.changed().test(oldElementToListen, newElementToListen)) {
-            l.action().accept(oldElementToListen, newElementToListen);
-            l.setLastChangeDocument(worker.getLastDoc());
+        if (l.changed().test(oldElementToListen, newElementToListen)) { // tests, if change occurs
+            l.action().accept(oldElementToListen, newElementToListen); // change occurs! Call the action function of a listener
+            l.setLastChangeDocument(worker.getLastDoc()); // set the listener's document to newest version
         }
     }
 
+    /**
+     * Class primary used for applying auto listening. It also manage instance of {@link org.jsoup.nodes.Document} object
+     * all application works with.
+     * All is automatic, you only need to initialize the worker start it by {@link #start()} method
+     *
+     * @see #lastDoc
+     * @see #work()
+     */
     private class Worker extends Thread {
-
+        /**
+         * This function should return the minimum delay of all listener's delays.
+         * The function will be called with instance of this listener (delay.apply(this))
+         */
         private final Function<Worker, Integer> delay;
+        /**
+         * The list of listeners, which has auto listening on. The worker will care about listeners, which turn auto
+         * listening off and it will remove it from the list
+         */
         private final LinkedList<ListenerTime> autoRefreshing;
+        /**
+         * Last version of document we are working on
+         */
         private Document lastDoc;
 
+        /**
+         * This constructor manage given delay function and do the initialize {@link #lastDoc} refresh by {@link #refreshDoc()}
+         * function.
+         * @param delay Given value for {@link #delay} attribute
+         */
         public Worker(Function<Worker, Integer> delay) {
             this.delay = delay;
             autoRefreshing = new LinkedList<>();
-            refreshDocs();
-//            setDaemon(true); // TODO: uncomment
+            refreshDoc();
+            setDaemon(true);
         }
 
+        /**
+         * If has auto listening on, configure the given listener and add it to {@link #autoRefreshing} list. Auto listening
+         * will be applied with further {@link #work()} method call
+         * @param l Listener to be added
+         */
         private void addToAutoRefreshing(Listener l) {
-            autoRefreshing.add(configure(new ListenerTime(l)));
+            if(l.config().autoCheckingOn())
+                autoRefreshing.add(configure(new ListenerTime(l)));
         }
 
+        /**
+         * Configure and return the given listenerTime. In fact ensure, that if the listeners will turn his auto
+         * listening off, remove it from the list
+         * @param lt ListenerTime to be configured
+         * @return Configured listenerTime
+         *
+         * @see org.webchecker.watcher.ListenerGroup.Worker.ListenerTime
+         */
         private ListenerTime configure(ListenerTime lt) {
             lt.listener.config().setOnAutoCheckingChange((oldValue, newValue) -> {
                 if (newValue == 0) {
@@ -187,6 +264,10 @@ public class ListenerGroup {
             return lt;
         }
 
+        /**
+         * Do the worker's work (applying auto listening) until the worker is not interrupted. Wait, while the
+         * {@link #autoRefreshing} list is empty
+         */
         @Override
         public void run() {
             while (!interrupted()) {
@@ -205,33 +286,51 @@ public class ListenerGroup {
             }
         }
 
+        /**
+         * Apply listening to all listeners in {@link #autoRefreshing} list, which needs it. Listener need listening,
+         * when the time between last listening and now is greater than listener's autoChecking parameter
+         */
         private void work() {
             autoRefreshing.stream().filter(ListenerTime::needRefresh).forEach(lt -> {
                 applyListening(lt.listener);
                 lt.refreshDone();
             });
-            refreshDocs();
+            refreshDoc();
         }
 
-        private long lastDocsRefresh;
+        /**
+         * Time, when the document we are working on was last refreshed
+         */
+        private long lastDocRefresh;
 
         {
-            lastDocsRefresh = 0;
+            lastDocRefresh = 0; // initialize to zero
         }
 
-        public long getLastDocsRefresh() {
-            return lastDocsRefresh;
+        /**
+         * Simple getter, that return the value of {@link #lastDocRefresh} attribute
+         * @return The value of {@link #lastDocRefresh} attribute
+         */
+        public long getLastDocRefresh() {
+            return lastDocRefresh;
         }
 
-        private synchronized void refreshDocs() {
+        private synchronized void refreshDoc() {
             lastDoc = toWork.get();
-            lastDocsRefresh = System.currentTimeMillis();
+            lastDocRefresh = System.currentTimeMillis();
         }
 
+        /**
+         * Simple getter, that return the value of {@link #lastDoc} attribute
+         * @return The value of {@link #lastDoc} attribute
+         */
         public synchronized Document getLastDoc() {
             return lastDoc;
         }
 
+        /**
+         * Causes waiting by wait method while the {@link #autoRefreshing} list is empty
+         */
         private void waitUntilListenersEmpty() {
             while (autoRefreshing.isEmpty()) {
                 try {
@@ -242,20 +341,40 @@ public class ListenerGroup {
             }
         }
 
+        /**
+         * A container for a listener and his last auto listening time. Provide function {@link #needRefresh()}, that
+         * determine, if the listener needs to apply listening
+         */
         private class ListenerTime {
-
+            /**
+             * The preserved listener
+             */
             private final Listener listener;
+            /**
+             * Time of last auto listening of the {@link #listener}
+             */
             private long lastRefresh;
 
+            /**
+             * Simple listener to that initialize the listenerTime
+             * @param listener Listener to be preserved
+             */
             public ListenerTime(Listener listener) {
                 this.listener = listener;
                 lastRefresh = 0;
             }
 
+            /**
+             * Determine, if the listener needs to apply listening
+             * @return The listener needs to apply listening
+             */
             public boolean needRefresh() {
                 return (System.currentTimeMillis() - lastRefresh) > listener.config().autoChecking();
             }
 
+            /**
+             * This function should be called after each auto listening of preserved listener
+             */
             public void refreshDone() {
                 lastRefresh = System.currentTimeMillis();
             }
