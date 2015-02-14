@@ -111,9 +111,9 @@ public class ListenerConfig {
     }
 
     /**
-     * Simple return value of {@link #autoChecking} attribute
+     * Simple return value of {@link #autoChecking} attribute. If auto checking is off, return zero
      *
-     * @return
+     * @return Value of {@link #autoChecking} attribute
      */
     public int autoChecking() {
         return autoChecking;
