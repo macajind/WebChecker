@@ -7,7 +7,8 @@ import java.util.LinkedList;
 import static org.junit.Assert.*;
 
 /**
- * @author Matěj Kripner
+ * @author Matěj Kripner <kripnermatej@gmail.com>
+ * @version 1.0
  */
 public class ListenerConfigTest {
     private static final int BAD_AUTO_CHECKING_VALUE = ListenerConfig.MIN_AUTO_CHECKING - 1;

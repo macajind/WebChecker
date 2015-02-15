@@ -20,7 +20,7 @@ import java.util.function.Supplier;
  * Each listener contains the max age of document, that can be regarded as a fresh. If this parameter is not specify
  * in constructor, the default value will be used.
  *
- * @author Matěj Kripner
+ * @author Matěj Kripner <kripnermatej@gmail.com>
  * @version 1.0
  * @see #toWork
  * @see #listeners
@@ -68,16 +68,21 @@ public class ListenerGroup {
     /**
      * The list of listeners of this group. Can not be null
      */
-    private final LinkedList<Listener> listeners;
+    private LinkedList<Listener> listeners;
     /**
      * The supplier of document, which the listeners will work on
      */
-    private final Supplier<Document> toWork;
-    private final Worker worker;
+    private Supplier<Document> toWork;
+    private Worker worker;
     /**
      * The max age of document, that can be in this group regarded as a fresh
      */
     private final long maxRefreshingDelay;
+
+    /**
+     * Mark if this group was destroyed. If true, you cannot call any method of this group
+     */
+    private boolean destroyed;
 
     /**
      * The constructor, that in fact do the same as {@link #ListenerGroup(java.util.function.Supplier, java.util.LinkedList, long)},
@@ -102,6 +107,7 @@ public class ListenerGroup {
         listeners = iniListeners;
         this.toWork = toWork;
         this.maxRefreshingDelay = maxRefreshingDelay;
+        destroyed = false;
         iniListeners();
         Function<Worker, Integer> delaySupplier = w -> w.autoRefreshing.stream() // supply the minimum of all listener's delays
                 .mapToInt(lt -> lt.listener.config().autoChecking()).min().getAsInt();
@@ -131,6 +137,7 @@ public class ListenerGroup {
      * @see #worker
      */
     public synchronized void addListener(Listener l) {
+        checkDestroyed();
         configure(l);
         listeners.add(l);
         if (l.config().autoCheckingOn()) {
@@ -174,6 +181,7 @@ public class ListenerGroup {
      * @param update This function has to determine, if we should apply listening to a listener
      */
     public synchronized void check(Predicate<Listener> update) {
+        checkDestroyed();
         if (System.currentTimeMillis() - worker.getLastDocRefresh() > maxRefreshingDelay) {
             refresh();
         }
@@ -184,6 +192,7 @@ public class ListenerGroup {
      * Refresh a document the group is working on
      */
     public synchronized void refresh() {
+        checkDestroyed();
         worker.refreshDoc();
     }
 
@@ -192,12 +201,51 @@ public class ListenerGroup {
      * @param l Listener to apply listening. If null, {@link java.lang.NullPointerException} is thrown
      */
     private void applyListening(Listener l) {
-        Element newElementToListen = l.supplyElement().apply(worker.getLastDoc()); // new element to compare with his old version
-        Element oldElementToListen = l.supplyElement().apply(l.getLastChangeDocument()); // old element to compare
+        Element newElementToListen = l.element().apply(worker.getLastDoc()); // new element to compare with his old version
+        Element oldElementToListen = l.element().apply(l.getLastChangeDocument()); // old element to compare
 
         if (l.changed().test(oldElementToListen, newElementToListen)) { // tests, if change occurs
             l.action().accept(oldElementToListen, newElementToListen); // change occurs! Call the action function of a listener
             l.setLastChangeDocument(worker.getLastDoc()); // set the listener's document to newest version
+        }
+    }
+
+    /**
+     * Destroy this listener group. This mean that you will be not able to use this object. And if you try to,
+     * it will throw an {@link org.webchecker.watcher.ListenerGroup.AlreadyDestroyedException}!
+     * This method should be called, when you know, that you will not use this group in the future;
+     */
+    public synchronized void destroy() {
+        worker.interrupt();
+        worker = null; // Let GC work
+        listeners = null;
+        toWork = null;
+        destroyed = true;
+    }
+
+    /**
+     * Return true, if this group was destroyed
+     * @return This group was destroyed
+     *
+     * @see #destroy()
+     */
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    /**
+     * Check, if this group was destroyed. If yes, throw an {@link org.webchecker.watcher.ListenerGroup.AlreadyDestroyedException}
+     */
+    private void checkDestroyed() {
+        if(destroyed) throw new AlreadyDestroyedException();
+    }
+
+    /**
+     * This exception should be thrown, when somebody call a method of destroyed group
+     */
+    class AlreadyDestroyedException extends RuntimeException {
+        public AlreadyDestroyedException() {
+            super("This listener group was already destroyed");
         }
     }
 

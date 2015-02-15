@@ -7,7 +7,7 @@ import java.util.function.BiConsumer;
  * easily extend. There is no rule of number of listeners to one config, but one listener have to have
  * exact one config.
  *
- * @author Matěj Kripner
+ * @author Matěj Kripner <kripnermatej@gmail.com>
  * @version 1.0
  * @see #autoChecking
  */

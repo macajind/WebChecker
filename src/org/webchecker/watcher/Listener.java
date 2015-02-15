@@ -13,7 +13,7 @@ import java.util.function.Function;
  * define function for determine changes in document and function, which should be used when a change/changes occurs.
  * The class is designed to provide maximal comfort for a user.
  *
- * @author Matěj Kripner
+ * @author Matěj Kripner<kripnermatej@gmail.com>
  * @version 1.0
  */
 public class Listener {
@@ -28,7 +28,7 @@ public class Listener {
      */
     private BiPredicate<Element, Element> changed;
     /**
-     * The function gets a document and extract the element for which change is this listener listening to.
+     * The function gets a document and extract the element which change is this listener listening to.
      */
     private Function<Document, Element> supplyElement;
     /**
@@ -120,7 +120,7 @@ public class Listener {
      *
      * @return The value of {@link #supplyElement} attribute
      */
-    public Function<Document, Element> supplyElement() {
+    public Function<Document, Element> element() {
         return supplyElement;
     }
 
@@ -156,11 +156,11 @@ public class Listener {
      * Check, if this listener is well filled and throw an {@link Listener.BadFilledException} when no.
      * In fact a listener is well filled, when:<br />
      * {@code
-     * action() != null && changed() != null && supplyElement() != null
+     * action() != null && changed() != null && element() != null
      * }
      */
     private void checkFilled() {
-        if (action() == null || changed() == null || supplyElement() == null) {
+        if (action() == null || changed() == null || element() == null) {
             throw new BadFilledException("Action, changed and element in each listener has to be filled");
         }
     }

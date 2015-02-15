@@ -4,7 +4,7 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
 /**
- * @author Matěj Kripner
+ * @author Matěj Kripner <kripnermatej@gmail.com>
  * @version 1.0
  */
 public class TestRunner {
