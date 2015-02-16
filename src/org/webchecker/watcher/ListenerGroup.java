@@ -3,7 +3,10 @@ package org.webchecker.watcher;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -46,7 +49,7 @@ public class ListenerGroup {
      */
     public static ListenerGroup newGroup(Supplier<Document> getDocument, long maxRefreshingDelay) {
         if (getDocument == null) throw new IllegalArgumentException("Document supplier can not be null");
-        if (maxRefreshingDelay < ListenerConfig.MIN_AUTO_CHECKING)
+        if (maxRefreshingDelay < ListenerConfig.MIN_AUTO_CHECKING && maxRefreshingDelay >= 0)
             throw new IllegalArgumentException("Max refresh delay can not be less than " + ListenerConfig.MIN_AUTO_CHECKING + ", but was " + maxRefreshingDelay);
         return new ListenerGroup(getDocument, maxRefreshingDelay);
     }
@@ -75,9 +78,11 @@ public class ListenerGroup {
     private Supplier<Document> toWork;
     private Worker worker;
     /**
-     * The max age of document, that can be in this group regarded as a fresh
+     * The max age of document, that can be in this group regarded as a fresh. If the value is negative, then
+     * the document will be never refreshed by calling {@link #check()} or {@link #check(java.util.function.Predicate)}
+     * method.
      */
-    private final long maxRefreshingDelay;
+    private long maxRefreshingDelay;
 
     /**
      * Mark if this group was destroyed. If true, you cannot call any method of this group
@@ -149,6 +154,19 @@ public class ListenerGroup {
     }
 
     /**
+     * Call the {@link #addListener(Listener)} method for each listeners in given array. In fact, this do the same as:
+     * {@code
+     * for(Listener l : listeners) {
+     *     addListener(l);
+     * }
+     * }
+     * @param listeners Array of listeners to add by {@link #addListener(Listener)} method
+     */
+    public synchronized void addAllListeners(Listener ... listeners) {
+        Arrays.stream(listeners).forEach(l -> addListener(l));
+    }
+
+    /**
      * Configure and return given listener. A listener is ready for future using after
      * configuring by this method
      * @param l The listener to configure
@@ -182,7 +200,9 @@ public class ListenerGroup {
      */
     public synchronized void check(Predicate<Listener> update) {
         checkDestroyed();
-        if (System.currentTimeMillis() - worker.getLastDocRefresh() > maxRefreshingDelay) {
+        if (maxRefreshingDelay > 0 &&
+                System.currentTimeMillis() - worker.getLastDocRefresh() > maxRefreshingDelay) {
+
             refresh();
         }
         listeners.stream().filter(update).forEach(this::applyListening);
@@ -247,6 +267,30 @@ public class ListenerGroup {
         public AlreadyDestroyedException() {
             super("This listener group was already destroyed");
         }
+    }
+
+    /**
+     * Simple getter, that return unmodifiable version of the {@link #listeners} list
+     * @return Unmodifiable version of the {@link #listeners} list
+     */
+    public List<Listener> listeners() {
+        return Collections.unmodifiableList(listeners);
+    }
+
+    /**
+     * Simple getter, that return value of the {@link #maxRefreshingDelay} attribute
+     * @return Value of the {@link #maxRefreshingDelay} attribute
+     */
+    public long getMaxRefreshingDelay() {
+        return maxRefreshingDelay;
+    }
+
+    /**
+     * Simple setter, that set the {@link #maxRefreshingDelay} attribute to the given value
+     * @param newValue New value of the {@link #maxRefreshingDelay} attribute
+     */
+    public synchronized void setMaxRefreshingDelay(long newValue) {
+        maxRefreshingDelay = newValue;
     }
 
     /**

@@ -16,21 +16,6 @@ import static org.junit.Assert.*;
  * @version 1.0
  */
 public class ListenerTest {
-    private Element supplyRandomElement() {
-        return Jsoup.parse("<p>text</p>");
-    }
-    private Function<Document, Element> supplyRandomElementFunction() {
-        return d -> d;
-    }
-    private BiPredicate<Element, Element> supplyRandomChangedFunction() {
-        return (e1, e2) -> true;
-    }
-    private BiConsumer<Element, Element> supplyRandomActionFunction() {
-        return (e1, e2) -> System.out.println();
-    }
-    private ListenerGroup supplyRandomListenerGroup() {
-        return ListenerGroup.newGroup(() -> Jsoup.parse(""));
-    }
 
     @Test
     public void testActionFilling() throws Exception {
@@ -72,9 +57,8 @@ public class ListenerTest {
     public void testBadFilledChecking() throws Exception {
         Listener
                 .listener()
-                .element(supplyRandomElementFunction())
-                .changed(supplyRandomChangedFunction())
-                .register(supplyRandomListenerGroup());
-
+                .element(Utils.randomElementFunction())
+                .changed(Utils.randomChangedFunction())
+                .register(Utils.randomListenerGroup());
     }
 }
