@@ -18,7 +18,7 @@ public class ListenerGroupTest {
     @Test
     public void testCreatingGroup() throws Exception {
         ListenerGroup g = ListenerGroup.newGroup(Utils.randomDocumentToWork());
-        assertArrayEquals("There are already some listeners", g.listeners().toArray(), new Listener[0]);
+        assertArrayEquals("There already are some listeners", g.listeners().toArray(), new Listener[0]);
         assertEquals("ListenerGroup is created and destroyed in no time", g.isDestroyed(), false);
     }
 

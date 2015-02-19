@@ -1,6 +1,5 @@
 package org.webchecker.watcher;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Before;
@@ -8,8 +7,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /**
@@ -42,22 +41,60 @@ public class IntegrationTest {
             return new TestLambdaResult(ID, null);
         }
     }
-
     @Test
     public void testSimpleListening() throws Exception {
-        System.out.println(Utils.testFileDocument());
-        ListenerGroup g = ListenerGroup.newGroup(Utils::testFileDocument);
+        ListenerGroup g = ListenerGroup.newGroup(Utils::testTestDocument);
+        // id to recognize lambda result
         int ID = 0;
         Function<Document, Element> extractElement = d -> d.select("p").first();
+        // new listener
         Listener
                 .listener()
                 .changed((e1, e2) -> !e1.text().equals(e2.text()))
                 .element(extractElement)
                 .action((e1, e2) -> results.add(new TestLambdaResult(ID, e2)))
                 .register(g);
-        extractElement
-                .apply(Utils.testFileDocument())
-                .appendText("ha");
+        //change doc
+        Document d = Utils.testTestDocument();
+        extractElement.apply(d).appendText("hi!");
+        Utils.updateTestDocument(d);
+        //try to apply listening
+        g.refresh();
+        g.check();
+
+        checkResult(ID);
+    }
+
+    @Test
+    public void testAutoRefreshing() throws Exception {
+        results.clear();
+        ListenerGroup g = ListenerGroup.newGroup(Utils::testTestDocument);
+        // id to recognize lambda result
+        int ID = 1;
+        Function<Document, Element> extractElement = d -> d.select("p").first();
+        // new listener
+        Listener
+                .listener()
+                .changed((e1, e2) -> !e1.text().equals(e2.text()))
+                .element(extractElement)
+                .action((e1, e2) -> results.add(new TestLambdaResult(ID, e2)))
+                .config(ListenerConfig.defaults().autoCheckingOn(60))
+                .register(g);
+        for(int i = 0; i < 3; i++) {
+            //change doc
+            Document d = Utils.testTestDocument();
+            extractElement.apply(d).appendText("hi!");
+            Utils.updateTestDocument(d);
+
+            Thread.sleep(200);
+            assertEquals(results.size(), 1);
+            checkResult(ID);
+        }
+
+    }
+
+    private void checkResult(int ID) {
         assertTrue(results.contains(TestLambdaResult.byID(ID)));
+        results.clear();
     }
 }

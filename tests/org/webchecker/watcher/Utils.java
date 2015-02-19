@@ -4,8 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -16,7 +15,7 @@ import java.util.function.Supplier;
  * @version 1.0
  */
 public class Utils {
-    public static final File TEST_PAGE = new File("/resource/test_page.html");
+    public static final File TEST_PAGE = new File("./tests/org/webchecker/watcher/resource/test_page.html");
     public static final String FILE_ENCODING = "UTF-8";
 
     public static Element randomElement() {
@@ -44,10 +43,21 @@ public class Utils {
                 .action(Utils.randomActionFunction())
                 .element(Utils.randomElementFunction());
     }
-    public static Document testFileDocument() {
+    public static Document testTestDocument() {
         try {
             return Jsoup.parse(TEST_PAGE, FILE_ENCODING);
         } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static void updateTestDocument(Document doc) {
+        try (BufferedWriter w = new BufferedWriter(new FileWriter(TEST_PAGE))) {
+            w.write("<!DOCTYPE html>");
+            for(String s : doc.toString().split("\n")) {
+                w.write(s);
+                w.newLine();
+            }
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

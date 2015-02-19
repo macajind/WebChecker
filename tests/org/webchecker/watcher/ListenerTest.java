@@ -53,7 +53,7 @@ public class ListenerTest {
         assertEquals(c, l.config());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Listener.BadFilledException.class)
     public void testBadFilledChecking() throws Exception {
         Listener
                 .listener()
