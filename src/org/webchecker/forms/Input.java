@@ -22,6 +22,8 @@ public class Input {
      * @param type {@link Type} of the {@link Input}
      */
     public Input(String name, Type type) {
+        if(name == null || name.isEmpty() || type == null)
+            throw new IllegalArgumentException("The name and type arguments has to be non null");
         this.name = name;
         this.type = type;
     }
