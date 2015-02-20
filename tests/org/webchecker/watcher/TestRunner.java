@@ -9,7 +9,12 @@ import org.junit.runner.Result;
  */
 public class TestRunner {
     public static void main(String[] args) {
-        Result result = JUnitCore.runClasses(ListenerConfigTest.class);
+        Result result = JUnitCore.runClasses(ListenerConfigTest.class
+                , ListenerGroupTest.class
+                , ListenerTest.class
+                , UtilsTest.class
+                , IntegrationTest.class
+        );
         if(result.wasSuccessful()) {
             System.out.println("Success!");
         } else {
