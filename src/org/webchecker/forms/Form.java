@@ -139,7 +139,7 @@ public class Form {
      */
     public Document send() throws IOException {
         HashMap<String, String> inputsMap = new HashMap<>();
-        inputs.forEach(input -> inputsMap.put(input.getName(), input.getValue()));
+        inputs.stream().filter(Input::isFilled).forEach(input -> inputsMap.put(input.getName(), input.getValue()));
 
         Connection.Response response = Jsoup.connect(action.getPath()).data(inputsMap).method(method).execute();
         if (response.statusCode() == 200) return response.parse();
