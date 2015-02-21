@@ -17,11 +17,18 @@ public class Input {
      * Constructor that leaves the {@link Input#value} set to {@code null}, that means, this input won't be {@link Form#send}.
      * Other then known {@link Type}s of {@link Input} should not be constructed, so parameter type can not be {@code null}.
      * Parameter name can not be empty or {@code null}, because {@link Form} doesn't create such {@link Input}s.
+     * If the given parameters do not correspond with this rules, an {@link java.lang.IllegalArgumentException}
+     * is thrown. In fact, for given parameters should this: ({@code name != null && !name.isEmpty() && type != null})
+     * return true
      *
      * @param name {@link String} name of the {@link Input}
      * @param type {@link Type} of the {@link Input}
+     * @throws java.lang.IllegalArgumentException is thrown when one or both of given parameters are null, or the given
+     * name is empty
      */
     public Input(String name, Type type) {
+        if(name == null || name.isEmpty() || type == null)
+            throw new IllegalArgumentException("The name and type arguments has to be non null");
         this.name = name;
         this.type = type;
     }

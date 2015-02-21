@@ -124,7 +124,10 @@ public class Form {
      * @param inputsValues collection of pairs, where first item represents {@link Input#name} and second one represents {@link Input#value}
      */
     public void fill(HashMap<String, String> inputsValues) {
-        this.inputs.stream().filter(input -> inputsValues.containsKey(input.getName())).forEach(input -> input.setValue(inputsValues.get(input.getName())));
+        this.inputs
+                .stream()
+                .filter(input -> inputsValues.containsKey(input.getName()))
+                .forEach(input -> input.setValue(inputsValues.get(input.getName())));
     }
 
     /**
