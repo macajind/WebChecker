@@ -56,8 +56,7 @@ public class RadioInput extends Input {
     }
 
     /**
-     * Gets {@link java.lang.Integer} index position of the last occurrence of default value from
-     * {@link RadioInput#defaultValues}.
+     * Gets {@link java.lang.Integer} index position of the last occurrence of default value from {@link RadioInput#defaultValues}.
      *
      * @param value {@link String} name of the default value
      * @return the {@link java.lang.Integer} index of the last occurrence of the default value name in {@link RadioInput#defaultValues},

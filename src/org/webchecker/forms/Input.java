@@ -1,10 +1,13 @@
 package org.webchecker.forms;
 
+import com.sun.istack.internal.NotNull;
+
 /**
  * HTML form input element.
  * Only considers name, value and type attributes of HTML input element.
  *
  * @author Jindřich Máca (Tuník)
+ * @author Matěj Kripner<kripnermatej@gmail.com>
  * @version 1.0
  */
 public class Input {
@@ -15,20 +18,18 @@ public class Input {
 
     /**
      * Constructor that leaves the {@link Input#value} set to {@code null}, that means, this input won't be {@link Form#send}.
+     * <p>
      * Other then known {@link Type}s of {@link Input} should not be constructed, so parameter type can not be {@code null}.
      * Parameter name can not be empty or {@code null}, because {@link Form} doesn't create such {@link Input}s.
-     * If the given parameters do not correspond with this rules, an {@link java.lang.IllegalArgumentException}
-     * is thrown. In fact, for given parameters should this: ({@code name != null && !name.isEmpty() && type != null})
-     * return true
+     * If the given parameters do not correspond with this rules, an {@link java.lang.IllegalArgumentException} is thrown.
      *
      * @param name {@link String} name of the {@link Input}
      * @param type {@link Type} of the {@link Input}
-     * @throws java.lang.IllegalArgumentException is thrown when one or both of given parameters are null, or the given
-     * name is empty
+     * @throws java.lang.IllegalArgumentException if one or both of given parameters are {@code null}, or the name parameter is empty
      */
-    public Input(String name, Type type) {
+    public Input(@NotNull String name, @NotNull Type type) throws IllegalArgumentException {
         if(name == null || name.isEmpty() || type == null)
-            throw new IllegalArgumentException("The name and type arguments has to be non null");
+            throw new IllegalArgumentException("The name and type arguments can't be null.");
         this.name = name;
         this.type = type;
     }
