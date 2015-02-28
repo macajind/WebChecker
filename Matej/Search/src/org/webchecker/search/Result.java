@@ -1,14 +1,7 @@
 package org.webchecker.search;
 
 import org.jsoup.nodes.Element;
-import sun.misc.IOUtils;
-import sun.nio.ch.IOUtil;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -19,7 +12,7 @@ public class Result {
     private final Element src;
     private final HashMap<String, Object> variables;
 
-    private Result(Element src) {
+    public Result(Element src) {
         this.src = src;
         variables = new HashMap<>();
     }
@@ -33,6 +26,9 @@ public class Result {
     }
     public Object varValue(String key) {
         return variables.get(key);
+    }
+    public Element element() {
+        return src;
     }
 
     @Override

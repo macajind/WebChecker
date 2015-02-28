@@ -1,5 +1,7 @@
 package org.webchecker.search;
 
+import org.jsoup.select.Elements;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +15,12 @@ public class Results {
 
     public Results(List<Result> results) {
         this.results = results.toArray(new Result[results.size()]);
+    }
+    public Results(Elements elements) {
+        results = elements
+                .stream()
+                .map(Result::result)
+                .toArray(Result[]::new);
     }
 
     public List<Result> results() {

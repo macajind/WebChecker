@@ -2,13 +2,9 @@ package org.webchecker.search;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
 /**
  * @author Matěj Kripner <kripnermatej@gmail.com>
@@ -18,7 +14,7 @@ public interface Parasite {
     int DEFAULT_TIMEOUT = 2000;
 
     String url(String query);
-    List<Result> extractElements(Document doc);
+    Results extractResults(Document doc);
 
     default public Parasite anotherURL(String url) {
         return new Parasite() {
@@ -28,18 +24,20 @@ public interface Parasite {
             }
 
             @Override
-            public List<Result> extractElements(Document doc) {
-                return Parasite.this.extractElements(doc);
+            public Results extractResults(Document doc) {
+                return Parasite.this.extractResults(doc);
             }
         };
     }
 
-    default Results search(String query, int timeout) throws IOException {
-        URL url = new URL(url(query));
-        Document srcDoc = Jsoup.parse(url, timeout);
-        return new Results(extractElements(srcDoc));
+    default public Results search(Document docWithResults) {
+        return extractResults(docWithResults);
     }
-    default Results search(String query) throws IOException {
+    default public Results search(String query, int timeout) throws IOException {
+        URL url = new URL(url(query));
+        return search(Jsoup.parse(url, timeout));
+    }
+    default public Results search(String query) throws IOException {
         return search(query, DEFAULT_TIMEOUT);
     }
 }
