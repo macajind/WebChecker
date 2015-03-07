@@ -10,7 +10,9 @@ import java.util.LinkedList;
  * @version 1.0
  */
 public class Parasites {
-    private Parasites() { }
+    private Parasites() {
+        //Exists only to defeat instantiation.
+    }
     public static Parasite getCSFDParasite() {
         return new CSFDParasite();
     }
