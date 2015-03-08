@@ -124,7 +124,9 @@ public class Form {
      * @param inputsValues collection of pairs, where first item represents {@link Input#name} and second one represents {@link Input#value}
      */
     public void fill(HashMap<String, String> inputsValues) {
-        this.inputs.stream().filter(input -> inputsValues.containsKey(input.getName())).forEach(input -> input.setValue(inputsValues.get(input.getName())));
+        this.inputs.stream()
+                .filter(input -> inputsValues.containsKey(input.getName()))
+                .forEach(input -> input.setValue(inputsValues.get(input.getName())));
     }
 
     /**
@@ -137,7 +139,7 @@ public class Form {
      */
     public Document send() throws IOException {
         HashMap<String, String> inputsMap = new HashMap<>();
-        inputs.forEach(input -> inputsMap.put(input.getName(), input.getValue()));
+        inputs.stream().filter(Input::isFilled).forEach(input -> inputsMap.put(input.getName(), input.getValue()));
 
         Connection.Response response = Jsoup.connect(action.getPath()).data(inputsMap).method(method).execute();
         if (response.statusCode() == 200) return response.parse();

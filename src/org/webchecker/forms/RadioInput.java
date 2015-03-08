@@ -49,14 +49,14 @@ public class RadioInput extends Input {
      * Sets {@link RadioInput#value} from {@link RadioInput#defaultValues} by index of the value in that list.
      *
      * @param index {@link java.lang.Integer} position of default value in {@link RadioInput#defaultValues}
-     * @throws IndexOutOfBoundsException if index is {@code null} or is out of range (index < 0 || index >= size())
+     * @throws IndexOutOfBoundsException if index is {@code null} or is out of range ({@code index < 0 || index >= size() })
      */
     public void setDefaultValue(Integer index) throws IndexOutOfBoundsException {
         this.setValue(this.defaultValues.get(index));
     }
 
     /**
-     * Gets {@link java.lang.Integer} index position of default value from {@link RadioInput#defaultValues}.
+     * Gets {@link java.lang.Integer} index position of the last occurrence of default value from {@link RadioInput#defaultValues}.
      *
      * @param value {@link String} name of the default value
      * @return the {@link java.lang.Integer} index of the last occurrence of the default value name in {@link RadioInput#defaultValues},

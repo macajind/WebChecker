@@ -77,7 +77,7 @@ public final class Forms {
     /**
      * Should select form element by identifier from currently opened page/document and return it.
      * When document is null application will throw {@link java.lang.NullPointerException}
-     * When application doesn't found any element, application will return {@literal null}
+     * When application doesn't found any element, application will return {@code null}
      * When found element is not form, application will try found another matching element, but if at page isn't any matching element application return {@link null}
      * When on the page is more then one elements with same identifier, application will select first matching form element
      *
