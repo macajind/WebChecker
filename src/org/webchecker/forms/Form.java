@@ -6,12 +6,15 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.webchecker.State;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * HTML form element.
@@ -138,12 +141,24 @@ public class Form {
      * @throws java.io.IOException if sending of the form fails or it returns HTTP respond code other then 200
      */
     public Document send() throws IOException {
+        return send(new HashMap<String, String>(), null).parse();
+    }
+    public Connection.Response send(Map<String, String> cookies, Predicate<Input> sendInput) throws IOException {
+        if(cookies == null) cookies = new HashMap<>();
+        // Get all notnull data for which return given predicate true
         HashMap<String, String> inputsMap = new HashMap<>();
-        inputs.stream().filter(Input::isFilled).forEach(input -> inputsMap.put(input.getName(), input.getValue()));
+        sendInput = (sendInput == null) ? Input::isFilled : sendInput.and(Input::isFilled); // Input is filled and should be included
+        inputs
+                .stream()
+                .filter(sendInput)
+                .forEach(input -> inputsMap.put(input.getName(), input.getValue()));
 
         Connection.Response response = Jsoup.connect(action.getPath()).data(inputsMap).method(method).execute();
-        if (response.statusCode() == 200) return response.parse();
+        if (response.statusCode() == 200) return response;
         else throw new IOException(response.statusMessage());
+    }
+    public Connection.Response send(State state, Predicate<Input> sendInput) throws IOException {
+        return send((state == null) ? null : state.getCookies(), sendInput);
     }
 
     /**
