@@ -13,7 +13,7 @@ import org.junit.runner.notification.Failure;
 public class FormTestRunner {
 
     public static void main(String[] args) {
-        Result result = JUnitCore.runClasses(FormsTest.class, FormTest.class);
+        Result result = JUnitCore.runClasses(FormsTest.class, FormTest.class, CheckboxInputTest.class, InputTest.class);
         for (Failure failure : result.getFailures()) {
             System.out.println(failure.toString() + failure.getTrace());
         }
