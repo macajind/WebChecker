@@ -21,10 +21,13 @@ public class FormMock extends Form {
     private Map<String, String> lastRequestCookies;
     private Map<String, String> nextResponseCookies;
 
+    private long sendCount;
 
     public FormMock(Element formElement, URL location) {
         super(formElement, location);
+        resetSendCount();
     }
+
 
     public static FormMock getSimpleFormMock() throws MalformedURLException {
         String urlS = "https://www.nothing.com/";
@@ -44,6 +47,7 @@ public class FormMock extends Form {
     @Override
     public Connection.Response send(Map<String, String> cookies, Predicate<Input> sendInput) throws IOException {
         lastRequestCookies = cookies;
+        sendCount++;
         return new Connection.Response() {
             @Override
             public int statusCode() {
@@ -150,5 +154,12 @@ public class FormMock extends Form {
                 return nextResponseCookies;
             }
         };
+    }
+
+    public long getSendCount() {
+        return sendCount;
+    }
+    public void resetSendCount() {
+        sendCount = 0;
     }
 }
