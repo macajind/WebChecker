@@ -1,6 +1,5 @@
 package org.webchecker.forms;
 
-import junit.framework.Assert;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Test;
@@ -10,12 +9,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 /**
- * Forms class test
+ * Test case for {@link Forms}.
  *
  * @author Filip Sohajek <filip.sohajek@gmail.com>
  * @author Marek Seďa <marecek.nenkovice225@gmail.com>

@@ -1,10 +1,8 @@
 package org.webchecker.forms;
 
 import org.jsoup.Jsoup;
-import org.jsoup.select.Elements;
-import org.jsoup.nodes.Element;
-import org.junit.Assert;
 import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Form class test
+ * Test case for {@link Form}.
  *
  * @author Filip Sohajek <filip.sohajek@gmail.com>
  * @author Marek Seďa <marecek.nenkovice225@gmail.com>
@@ -22,7 +20,8 @@ import static org.junit.Assert.assertNotNull;
  */
 public class FormTest {
 
-    private Form form;
+    private final Form form;
+
     public FormTest() throws IOException {
         Forms formsInstance = Forms.getInstance();
         System.out.println(System.getProperty("user.dir"));
@@ -39,8 +38,9 @@ public class FormTest {
         form.fill(values);
         assertNotNull(form.getInputs());
     }
+
     @Test
-    public void testInputs(){
+    public void testInputs() {
         ArrayList<Input> inputs = form.getInputs();
         assertEquals(inputs.get(0).getType(), Type.TEXT);
         assertEquals(inputs.get(1).getType(), Type.TEXT);

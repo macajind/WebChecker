@@ -4,17 +4,23 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Input class test
+ * Test case for {@link Input}.
  *
  * @author Marek Seďa <marecek.nenkovice225@gmail.com>
+ * @author Jindřich Máca (Tuník)
  * @version 1.0
  */
 public class InputTest {
+
+    private final Input input = new Input("name", Type.TEXT);
+
     @Test
-    public void inputTest(){
-        Input input = new Input("name", Type.TEXT);
+    public void getTypeTest() {
         Assert.assertEquals(input.getType(), Type.TEXT);
-        Assert.assertEquals(input.getName(), "name");
     }
 
+    @Test
+    public void getNameTest() {
+        Assert.assertEquals(input.getName(), "name");
+    }
 }
