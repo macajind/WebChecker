@@ -1,5 +1,7 @@
 package org.webchecker.forms;
 
+import com.sun.istack.internal.NotNull;
+
 /**
  * HTML form input element with type checkbox.
  * Extends from {@link Input}, but differs itself by considering also default value of input element.
@@ -12,30 +14,32 @@ public class CheckboxInput extends Input {
     private final String defaultValue;
 
     /**
-     * Calls default {@link Input#Input(String, Type)} constructor, but also sets this {@link CheckboxInput#defaultValue}.
+     * Calls default {@link Input#Input(String, Type)} constructor, but also sets this default value.
      *
      * @param name         {@link String} name of the {@link CheckboxInput}
      * @param defaultValue {@link String} default value of the {@link CheckboxInput}
+     * @throws IllegalArgumentException if given name is null or empty
      */
-    public CheckboxInput(String name, String defaultValue) {
+    public CheckboxInput(@NotNull String name, String defaultValue) throws IllegalArgumentException {
         super(name, Type.CHECKBOX);
         this.defaultValue = defaultValue;
     }
 
     /**
-     * Calls default {@link Input#Input(String, Type, String)} constructor, but also sets this {@link CheckboxInput#defaultValue}.
+     * Calls default {@link Input#Input(String, Type, String)} constructor, but also sets this default value.
      *
      * @param name         {@link String} name of the {@link CheckboxInput}
      * @param value        {@link String} value of the {@link CheckboxInput}
      * @param defaultValue {@link String} default value of the {@link CheckboxInput}
+     * @throws IllegalArgumentException if given name is null or empty
      */
-    public CheckboxInput(String name, String value, String defaultValue) {
+    public CheckboxInput(@NotNull String name, String value, String defaultValue) throws IllegalArgumentException {
         super(name, Type.CHECKBOX, value);
         this.defaultValue = defaultValue;
     }
 
     /**
-     * Getter for the {@link CheckboxInput#defaultValue}.
+     * Getter for the default value.
      *
      * @return {@link CheckboxInput#defaultValue} of this {@link CheckboxInput}
      */

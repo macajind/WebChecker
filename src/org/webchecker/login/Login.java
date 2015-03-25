@@ -134,7 +134,7 @@ public final class Login {
      */
     public Connection.Response login() throws NotPreparedException, IOException {
         checkPrepared();
-        Connection.Response response = loginForm.send(state, null);
+        Connection.Response response = loginForm.send(null);
         state.setCookies(response.cookies());
         return response;
     }
@@ -149,7 +149,7 @@ public final class Login {
      */
     public boolean logged(Predicate<Map<String, String>> isLogged) throws IOException, NotPreparedException {
         checkPrepared();
-        return isLogged.test(loginForm.send((State) null, i -> false).cookies());
+        return isLogged.test(loginForm.send(i -> false).cookies());
     }
 
     /**

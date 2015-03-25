@@ -1,5 +1,7 @@
 package org.webchecker.forms;
 
+import com.sun.istack.internal.NotNull;
+
 import java.util.ArrayList;
 
 /**
@@ -18,8 +20,9 @@ public class RadioInput extends Input {
      *
      * @param name          {@link String} name of the {@link RadioInput}
      * @param defaultValues {@link java.util.ArrayList} of default values possible for this {@link RadioInput}
+     * @throws IllegalArgumentException if given name is null or empty
      */
-    public RadioInput(String name, ArrayList<String> defaultValues) {
+    public RadioInput(@NotNull String name, ArrayList<String> defaultValues) throws IllegalArgumentException {
         super(name, Type.RADIO);
         this.defaultValues = defaultValues;
     }
@@ -30,25 +33,26 @@ public class RadioInput extends Input {
      * @param name          {@link String} name of the {@link Input}
      * @param value         {@link String} value of the {@link Input}
      * @param defaultValues {@link java.util.ArrayList} of default values possible for this {@link RadioInput}
+     * @throws IllegalArgumentException if given name is null or empty
      */
-    public RadioInput(String name, String value, ArrayList<String> defaultValues) {
+    public RadioInput(@NotNull String name, String value, ArrayList<String> defaultValues) throws IllegalArgumentException {
         super(name, Type.RADIO, value);
         this.defaultValues = defaultValues;
     }
 
     /**
-     * Getter for the {@link RadioInput#defaultValues}.
+     * Getter for the input default value.
      *
-     * @return {@link RadioInput#defaultValues} of this {@link RadioInput}
+     * @return input default value of this {@link RadioInput}
      */
     public ArrayList<String> getDefaultValues() {
         return defaultValues;
     }
 
     /**
-     * Sets {@link RadioInput#value} from {@link RadioInput#defaultValues} by index of the value in that list.
+     * Sets input default value from input default values list by index of the value in that list.
      *
-     * @param index {@link java.lang.Integer} position of default value in {@link RadioInput#defaultValues}
+     * @param index {@link java.lang.Integer} position of default value in input default values list
      * @throws IndexOutOfBoundsException if index is {@code null} or is out of range ({@code index < 0 || index >= size() })
      */
     public void setDefaultValue(Integer index) throws IndexOutOfBoundsException {
@@ -56,11 +60,11 @@ public class RadioInput extends Input {
     }
 
     /**
-     * Gets {@link java.lang.Integer} index position of the last occurrence of default value from {@link RadioInput#defaultValues}.
+     * Gets {@link java.lang.Integer} index position of the last occurrence of default value from input default values list.
      *
      * @param value {@link String} name of the default value
-     * @return the {@link java.lang.Integer} index of the last occurrence of the default value name in {@link RadioInput#defaultValues},
-     * or -1 if this {@link RadioInput#defaultValues} does not contain this default value, that apply also for {@code null}
+     * @return the {@link java.lang.Integer} index of the last occurrence of the default value name in input default values list,
+     * or -1 if this input default values list does not contain this default this value, that applies also for {@code null}
      */
     public Integer containsDefaultValue(String value) {
         return this.defaultValues.lastIndexOf(value);

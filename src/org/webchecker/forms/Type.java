@@ -9,6 +9,7 @@ package org.webchecker.forms;
  */
 public enum Type {
     TEXT("text"), PASSWORD("password"), RADIO("radio"), CHECKBOX("checkbox"), HIDDEN("hidden");
+
     private final String type;
 
     private Type(String type) {

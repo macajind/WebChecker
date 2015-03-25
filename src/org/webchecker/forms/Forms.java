@@ -70,9 +70,12 @@ public final class Forms {
 
     /**
      * Get current {@link Document}
+     *
      * @return Current {@link Document}
      */
-    public Document getDocument() { return this.document; }
+    public Document getDocument() {
+        return this.document;
+    }
 
     /**
      * Should select form element by identifier from currently opened page/document and return it.
@@ -85,7 +88,7 @@ public final class Forms {
      * @return new instance of {@link Form}, which contains elements of found form and url page of {@link Document}
      */
     public Form selectForm(String identifier) throws MalformedURLException {
-        for(Element element : document.select(identifier)) {
+        for (Element element : document.select(identifier)) {
             if (isElementForm(element)) {
                 return new Form(element, new URL(document.baseUri()));
             }

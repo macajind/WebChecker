@@ -6,14 +6,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.webchecker.State;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Predicate;
 
 /**
@@ -127,9 +125,7 @@ public class Form {
      * @param inputsValues collection of pairs, where first item represents {@link Input#name} and second one represents {@link Input#value}
      */
     public void fill(HashMap<String, String> inputsValues) {
-        this.inputs.stream()
-                .filter(input -> inputsValues.containsKey(input.getName()))
-                .forEach(input -> input.setValue(inputsValues.get(input.getName())));
+        this.inputs.stream().filter(input -> inputsValues.containsKey(input.getName())).forEach(input -> input.setValue(inputsValues.get(input.getName())));
     }
 
     /**
@@ -141,40 +137,34 @@ public class Form {
      * @throws java.io.IOException if sending of the form fails or it returns HTTP respond code other then 200
      */
     public Document send() throws IOException {
-        return send(new HashMap<String, String>(), null).parse();
+        return send(null).parse();
     }
-    public Connection.Response send(Map<String, String> cookies, Predicate<Input> sendInput) throws IOException {
-        if(cookies == null) cookies = new HashMap<>();
+
+    public Connection.Response send(Predicate<Input> sendInput) throws IOException {
         // Get all notnull data for which return given predicate true
         HashMap<String, String> inputsMap = new HashMap<>();
         sendInput = (sendInput == null) ? Input::isFilled : sendInput.and(Input::isFilled); // Input is filled and should be included
-        inputs
-                .stream()
-                .filter(sendInput)
-                .forEach(input -> inputsMap.put(input.getName(), input.getValue()));
+        inputs.stream().filter(sendInput).forEach(input -> inputsMap.put(input.getName(), input.getValue()));
 
         Connection.Response response = Jsoup.connect(action.getPath()).data(inputsMap).method(method).execute();
         if (response.statusCode() == 200) return response;
         else throw new IOException(response.statusMessage());
     }
-    public Connection.Response send(State state, Predicate<Input> sendInput) throws IOException {
-        return send((state == null) ? null : state.getCookies(), sendInput);
-    }
 
     /**
-     * Getter for {@link Form#action} {@link URL} address setup in construction of the {@link Form}.
+     * Getter for action {@link URL} address setup in construction of the {@link Form}.
      *
-     * @return {@link Form#action} {@link URL} address
+     * @return action {@link URL} address
      */
     public URL getAction() {
         return action;
     }
 
     /**
-     * Getter for {@link Form#method} type setup in construction of the {@link Form}.
+     * Getter for method type setup in construction of the {@link Form}.
      * This type could be either {@link Method#GET} or {@link Method#POST}.
      *
-     * @return {@link Form#method} type
+     * @return method type of this {@link Form}
      */
     public Method getMethod() {
         return method;

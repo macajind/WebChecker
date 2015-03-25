@@ -47,8 +47,7 @@ public class FormMock extends Form {
     }
 
     @Override
-    public Connection.Response send(Map<String, String> cookies, Predicate<Input> sendInput) throws IOException {
-        lastRequestCookies = cookies;
+    public Connection.Response send(Predicate<Input> sendInput) throws IOException {
         sendCount++;
         return new Connection.Response() {
             @Override
