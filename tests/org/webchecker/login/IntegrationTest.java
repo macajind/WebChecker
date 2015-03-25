@@ -11,10 +11,13 @@ import java.util.function.Predicate;
 import static org.junit.Assert.*;
 
 /**
+ * Integration test for logging with Login module represented by class {@link Login}.
+ *
  * @author Matěj Kripner <kripnermatej@gmail.com>
  * @version 1.0
  */
 public class IntegrationTest {
+
     @Test
     public void testSimpleLogin() throws Exception {
         State s = new State();

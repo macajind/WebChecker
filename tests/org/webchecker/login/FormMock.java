@@ -14,10 +14,13 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 /**
+ * Mock for class {@link Form}.
+ *
  * @author Matěj Kripner <kripnermatej@gmail.com>
  * @version 1.0
  */
 public class FormMock extends Form {
+
     private Map<String, String> lastRequestCookies;
     private Map<String, String> nextResponseCookies;
 
@@ -27,7 +30,6 @@ public class FormMock extends Form {
         super(formElement, location);
         resetSendCount();
     }
-
 
     public static FormMock getSimpleFormMock() throws MalformedURLException {
         String urlS = "https://www.nothing.com/";
@@ -159,6 +161,7 @@ public class FormMock extends Form {
     public long getSendCount() {
         return sendCount;
     }
+
     public void resetSendCount() {
         sendCount = 0;
     }
