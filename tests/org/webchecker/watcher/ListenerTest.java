@@ -41,7 +41,7 @@ public class ListenerTest {
 
     @Test
     public void testConfigFilling() throws Exception {
-        ListenerConfig c = ListenerConfig.defaults();
+        ListenerConfig c = ListenerConfig.getDefaults();
         Listener l = Listener.listener().setConfig(c);
         assertEquals(c, l.getConfig());
     }

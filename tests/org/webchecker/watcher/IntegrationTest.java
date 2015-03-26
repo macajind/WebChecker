@@ -72,7 +72,7 @@ public class IntegrationTest {
         int ID = 1;
         Function<Document, Element> extractElement = d -> d.select("p").first();
         // new listener
-        Listener.listener().setChanged((e1, e2) -> !e1.text().equals(e2.text())).setSupplyElement(extractElement).setAction((e1, e2) -> results.add(new TestLambdaResult(ID, e2))).setConfig(ListenerConfig.defaults().autoCheckingOn(60)).register(g);
+        Listener.listener().setChanged((e1, e2) -> !e1.text().equals(e2.text())).setSupplyElement(extractElement).setAction((e1, e2) -> results.add(new TestLambdaResult(ID, e2))).setConfig(ListenerConfig.getDefaults().autoCheckingOn(60)).register(g);
         for (int i = 0; i < 3; i++) {
             //change doc
             Document d = Utils.testTestDocument();

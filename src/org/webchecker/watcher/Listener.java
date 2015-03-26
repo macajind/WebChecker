@@ -90,7 +90,7 @@ public class Listener {
      * @return this
      */
     public Listener setConfig(ListenerConfig config) {
-        this.config = (config == null) ? ListenerConfig.defaults() : config;
+        this.config = (config == null) ? ListenerConfig.getDefaults() : config;
         return this;
     }
 

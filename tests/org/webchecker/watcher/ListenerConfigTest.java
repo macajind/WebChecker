@@ -19,7 +19,7 @@ public class ListenerConfigTest {
 
     @Test
     public void testAutoCheckingOn() throws Exception {
-        ListenerConfig c = ListenerConfig.defaults();
+        ListenerConfig c = ListenerConfig.getDefaults();
         int value = GOOD_AUTO_CHECKING_VALUE;
         c.autoCheckingOn(value);
         assertEquals("c.isAutoCheckingOn() does not work", c.isAutoCheckingOn(), true);
@@ -28,7 +28,7 @@ public class ListenerConfigTest {
 
     @Test
     public void testAutoCheckingOff() throws Exception {
-        ListenerConfig c = ListenerConfig.defaults();
+        ListenerConfig c = ListenerConfig.getDefaults();
         c.autoCheckingOff();
         assertEquals("c.isAutoCheckingOn() does not work", c.isAutoCheckingOn(), false);
         assertEquals("c.getAutoChecking() does not work", c.getAutoChecking(), 0);
@@ -36,13 +36,13 @@ public class ListenerConfigTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testAutoCheckingValidating() throws Exception {
-        ListenerConfig c = ListenerConfig.defaults();
+        ListenerConfig c = ListenerConfig.getDefaults();
         c.autoCheckingOn(BAD_AUTO_CHECKING_VALUE);
     }
 
     @Test
     public void testOnAutoCheckingCalling() throws Exception {
-        ListenerConfig c = ListenerConfig.defaults();
+        ListenerConfig c = ListenerConfig.getDefaults();
         LinkedList<Integer> forLambda = new LinkedList<>();
         c.setOnAutoCheckingChange((oldValue, newValue) -> {
             forLambda.add(oldValue);

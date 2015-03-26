@@ -40,7 +40,7 @@ public class ListenerConfig {
      *
      * @return new config in the default state
      */
-    public static ListenerConfig defaults() {
+    public static ListenerConfig getDefaults() {
         return new ListenerConfig();
     }
 
