@@ -222,7 +222,7 @@ public final class Login {
      *
      * @throws NotPreparedException if it is not prepared
      */
-    private void checkPrepared() {
+    private void checkPrepared() throws NotPreparedException {
         if (!prepared()) throw new NotPreparedException();
     }
 
