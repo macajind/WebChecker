@@ -2,6 +2,7 @@ package org.webchecker.watcher;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -53,11 +54,11 @@ public class IntegrationTest {
         Function<Document, Element> extractElement = d -> d.select("p").first();
         // new listener
         Listener.listener().setChanged((e1, e2) -> !e1.text().equals(e2.text())).setSupplyElement(extractElement).setAction((e1, e2) -> results.add(new TestLambdaResult(ID, e2))).register(g);
-        //change doc
+        // change doc
         Document d = Utils.testTestDocument();
         extractElement.apply(d).appendText("hi!");
         Utils.updateTestDocument(d);
-        //try to apply listening
+        // try to apply listening
         g.refresh();
         g.check();
 
@@ -74,12 +75,12 @@ public class IntegrationTest {
         // new listener
         Listener.listener().setChanged((e1, e2) -> !e1.text().equals(e2.text())).setSupplyElement(extractElement).setAction((e1, e2) -> results.add(new TestLambdaResult(ID, e2))).setConfig(ListenerConfig.getDefaults().autoCheckingOn(60)).register(g);
         for (int i = 0; i < 3; i++) {
-            //change doc
+            // change doc
             Document d = Utils.testTestDocument();
             extractElement.apply(d).appendText("hi!");
             Utils.updateTestDocument(d);
 
-            Thread.sleep(200);
+            Thread.sleep(200); // this is not correct solution, but it works
             assertEquals(results.size(), 1);
             checkResult(ID);
         }
@@ -88,5 +89,13 @@ public class IntegrationTest {
     private void checkResult(int ID) {
         assertTrue(results.contains(TestLambdaResult.byID(ID)));
         results.clear();
+    }
+
+    @AfterClass
+    public static void clean() throws Exception {
+        Function<Document, Element> extractElement = d -> d.select("p").first();
+        Document d = Utils.testTestDocument();
+        extractElement.apply(d).html("first <a href=\"https://www.google.cz/search?q=paragraph\">paragraph</a>");
+        Utils.updateTestDocument(d);
     }
 }

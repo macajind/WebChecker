@@ -20,7 +20,7 @@ import java.util.function.Supplier;
  * @version 1.0
  */
 public class Utils {
-    
+
     public static final File TEST_PAGE = new File("./tests/org/webchecker/watcher/resource/test_page.html");
     public static final String FILE_ENCODING = "UTF-8";
 
@@ -62,7 +62,6 @@ public class Utils {
 
     public static void updateTestDocument(Document doc) {
         try (BufferedWriter w = new BufferedWriter(new FileWriter(TEST_PAGE))) {
-            w.write("<!DOCTYPE html>");
             for (String s : doc.toString().split("\n")) {
                 w.write(s);
                 w.newLine();
