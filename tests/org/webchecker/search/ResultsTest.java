@@ -10,10 +10,13 @@ import java.util.List;
 import static org.junit.Assert.assertArrayEquals;
 
 /**
+ * Test case for {@link Results}.
+ *
  * @author Matěj Kripner <kripnermatej@gmail.com>
  * @version 1.0
  */
 public class ResultsTest {
+
     @Test
     public void testResultsCreatingFromList() throws Exception {
         List<Result> results = new ArrayList<>();
@@ -25,7 +28,7 @@ public class ResultsTest {
         results.add(r3);
 
         Results r = new Results(results);
-        assertArrayEquals(results.toArray(), r.results().toArray());
+        assertArrayEquals(results.toArray(), r.getResults().toArray());
     }
 
     @Test
@@ -41,10 +44,7 @@ public class ResultsTest {
         Elements e = new Elements(elements);
         Results r = new Results(e);
 
-        Element[] rsElements = r.results()
-                .stream()
-                .map(Result::element)
-                .toArray(Element[]::new);
+        Element[] rsElements = r.getResults().stream().map(Result::getElement).toArray(Element[]::new);
         assertArrayEquals(rsElements, elements.toArray());
     }
 }

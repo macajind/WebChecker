@@ -14,36 +14,35 @@ import java.util.List;
  * @version 1.0
  */
 public class Results {
-    /**
-     * A list of results
-     */
+
+    // A list of getResults.
     private final Result[] results;
 
     /**
-     * Construct {@link org.webchecker.search.Results} from a list of {@link org.webchecker.search.Result results}
-     * @param results a list of results; can't be {@code null}
+     * Construct {@link org.webchecker.search.Results} from a list of results.
+     *
+     * @param results a list of results; shouldn't be {@code null}
      */
     public Results(@NotNull List<Result> results) {
-        this.results = results.toArray(new Result[results.size()]);
+        this.results = results != null ? results.toArray(new Result[results.size()]) : new Result[]{};
     }
 
     /**
      * Construct {@link org.webchecker.search.Results} from {@link org.jsoup.select.Elements}. Each element in
-     * {@link org.jsoup.select.Elements} object has to represent one result
-     * @param elements {@link org.jsoup.select.Elements} object. Each element has to represent one result
+     * {@link org.jsoup.select.Elements} object has to represent one result.
+     *
+     * @param elements {@link org.jsoup.select.Elements} object; each element has to represent one result
      */
     public Results(@NotNull Elements elements) {
-        results = elements
-                .stream()
-                .map(Result::result)
-                .toArray(Result[]::new);
+        this.results = elements != null ? elements.stream().map(Result::result).toArray(Result[]::new) : new Result[]{};
     }
 
     /**
-     * Return unmodifiable {@link #results list} of results
-     * @return unmodifiable {@link #results list} of results
+     * Return unmodifiable list of results.
+     *
+     * @return unmodifiable list of results
      */
-    public List<Result> results() {
+    public List<Result> getResults() {
         return Collections.unmodifiableList(Arrays.asList(results));
     }
 }
