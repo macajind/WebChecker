@@ -4,30 +4,34 @@ import org.junit.Test;
 
 import java.util.LinkedList;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
+ * Test case for {@link ListenerConfig}.
+ *
  * @author Matěj Kripner <kripnermatej@gmail.com>
  * @version 1.0
  */
 public class ListenerConfigTest {
+
     private static final int BAD_AUTO_CHECKING_VALUE = ListenerConfig.MIN_AUTO_CHECKING - 1;
     private static final int GOOD_AUTO_CHECKING_VALUE = ListenerConfig.MIN_AUTO_CHECKING + 1;
-    
+
     @Test
     public void testAutoCheckingOn() throws Exception {
         ListenerConfig c = ListenerConfig.defaults();
         int value = GOOD_AUTO_CHECKING_VALUE;
         c.autoCheckingOn(value);
-        assertEquals("c.autoCheckingOn() does not work", c.autoCheckingOn(), true);
-        assertEquals("c.autoChecking() does not work", c.autoChecking(), value);
+        assertEquals("c.isAutoCheckingOn() does not work", c.isAutoCheckingOn(), true);
+        assertEquals("c.getAutoChecking() does not work", c.getAutoChecking(), value);
     }
+
     @Test
     public void testAutoCheckingOff() throws Exception {
         ListenerConfig c = ListenerConfig.defaults();
         c.autoCheckingOff();
-        assertEquals("c.autoCheckingOn() does not work", c.autoCheckingOn(), false);
-        assertEquals("c.autoChecking() does not work", c.autoChecking(), 0);
+        assertEquals("c.isAutoCheckingOn() does not work", c.isAutoCheckingOn(), false);
+        assertEquals("c.getAutoChecking() does not work", c.getAutoChecking(), 0);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -44,7 +48,7 @@ public class ListenerConfigTest {
             forLambda.add(oldValue);
             forLambda.add(newValue);
         });
-        int oldValue = c.autoChecking();
+        int oldValue = c.getAutoChecking();
         int newValue = GOOD_AUTO_CHECKING_VALUE;
         c.autoCheckingOn(newValue);
 

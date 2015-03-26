@@ -9,66 +9,55 @@ import java.util.function.BiConsumer;
  *
  * @author Matěj Kripner <kripnermatej@gmail.com>
  * @version 1.0
- * @see #autoChecking
+ * @see Listener
  */
 public class ListenerConfig {
 
     /**
-     * Min value of {@link #autoChecking}. Has to be positive.
+     * Min value of auto checking delay. Has to be positive.
      */
     public static final int MIN_AUTO_CHECKING = 25;
-    /**
-     * Represents the preferred delay between two listening of the listener. If the value is 0,
-     * listening should not be automatic and auto checking is off.
-     *
-     * @see #onAutoCheckingChange
-     * @see #autoChecking()
-     * @see #autoCheckingOn()
-     * @see #autoCheckingOff()
-     * @see #autoCheckingOn(int)
-     */
+
+    /* Represents the preferred delay between two listening of the listener. If the value is 0,
+       listening should not be automatic and auto checking is off. */
     private int autoChecking;
-    /**
-     * This function will be called when change of {@link #autoChecking} parameter occurs.
-     */
+
+    // This function will be called when change of #autoChecking parameter occurs.
     private BiConsumer<Integer, Integer> onAutoCheckingChange;
 
-    /**
-     * Constructor that sets this config to the default state
-     *
-     * @see #setToDefault()
-     */
+    // Constructor that sets this config to the default state.
     private ListenerConfig() {
         setToDefault();
     }
 
-    /**
-     * Sets this config to the default state.
-     */
+    // Sets this config to the default state.
     private void setToDefault() {
         autoChecking = 0;
     }
 
     /**
-     * Returns new config in the default state
+     * Returns new config in the default state.
      *
-     * @return New config in the default state
+     * @return new config in the default state
      */
     public static ListenerConfig defaults() {
         return new ListenerConfig();
     }
 
     /**
-     * Turn auto checking on with the given delay. The given delay has to be valid. In fact, delay is valid when:<br />
+     * Turn auto checking on with the given delay.
+     * <p>
+     * The given delay has to be valid. In fact, delay is valid when:<br />
      * {@code
      * delay >= {@link #MIN_AUTO_CHECKING}
      * }
      *
-     * @param delay The new value of delay between two listening of a listener
-     * @return This
+     * @param delay the new value of delay between two listening of a listener
+     * @return this
+     * @throws IllegalArgumentException if validation of the given delay fails
      * @see #validateDelay(int)
      */
-    public ListenerConfig autoCheckingOn(int delay) {
+    public ListenerConfig autoCheckingOn(int delay) throws IllegalArgumentException {
         validateDelay(delay);
         autoChecking = delay;
         runOnAutoCheckingChange(0, delay);
@@ -76,22 +65,25 @@ public class ListenerConfig {
     }
 
     /**
-     * Checks that the given delay is valid. In fact, delay is valid when:<br />
+     * Checks that the given delay is valid.
+     * <p>
+     * In fact, delay is valid when:<br />
      * {@code
      * delay >= {@link #MIN_AUTO_CHECKING}
      * }
      *
-     * @param delay The value to check
+     * @param delay the value to check
+     * @throws IllegalArgumentException if value of the given delay is not valid
      */
-    private void validateDelay(int delay) {
+    private void validateDelay(int delay) throws IllegalArgumentException {
         if (delay < MIN_AUTO_CHECKING)
             throw new IllegalArgumentException("delay can not be less than " + MIN_AUTO_CHECKING + ", but was " + delay);
     }
 
     /**
-     * Turn the auto checking off
+     * Turn the auto checking off.
      *
-     * @return This
+     * @return this
      */
     public ListenerConfig autoCheckingOff() {
         int tmp = autoChecking;
@@ -101,37 +93,37 @@ public class ListenerConfig {
     }
 
     /**
-     * Is not null, run {@link #onAutoCheckingChange}
+     * Is not {@code null}, run auto checking change function.
      *
-     * @param oldValue Old value of {@link #autoChecking}
-     * @param newValue New value of {@link #autoChecking}
+     * @param oldValue old value of auto checking
+     * @param newValue new value of auto checking
      */
     private void runOnAutoCheckingChange(int oldValue, int newValue) {
         if (onAutoCheckingChange != null) onAutoCheckingChange.accept(oldValue, newValue);
     }
 
     /**
-     * Simple return value of {@link #autoChecking} attribute. If auto checking is off, return zero
+     * Simply return value of auto checking attribute. If auto checking is off, return zero.
      *
-     * @return Value of {@link #autoChecking} attribute
+     * @return value of auto checking attribute
      */
-    public int autoChecking() {
+    public int getAutoChecking() {
         return autoChecking;
     }
 
     /**
-     * Tests that autoChecking is on
+     * Tests that auto checking is on.
      *
-     * @return Auto checking is on
+     * @return auto checking is on
      */
-    public boolean autoCheckingOn() {
-        return autoChecking() != 0;
+    public boolean isAutoCheckingOn() {
+        return getAutoChecking() != 0;
     }
 
     /**
-     * Simple sets the value of {@link #onAutoCheckingChange} attribute to given value
+     * Simple sets the value of auto checking change function attribute to given value.
      *
-     * @param onAutoCheckingChange New value of {@link #onAutoCheckingChange} attribute
+     * @param onAutoCheckingChange new value of auto checking change function attribute
      */
     public void setOnAutoCheckingChange(BiConsumer<Integer, Integer> onAutoCheckingChange) {
         this.onAutoCheckingChange = onAutoCheckingChange;

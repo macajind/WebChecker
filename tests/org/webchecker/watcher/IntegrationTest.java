@@ -5,13 +5,15 @@ import org.jsoup.nodes.Element;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
+ * Integration test for Watcher Module.
+ *
  * @author Matěj Kripner <kripnermatej@gmail.com>
  * @version 1.0
  */
@@ -32,15 +34,17 @@ public class IntegrationTest {
             this.ID = ID;
             this.value = value;
         }
+
         @Override
         public boolean equals(Object o) {
-            if(!(o instanceof TestLambdaResult)) return false;
-            return ((TestLambdaResult) o).ID == ID;
+            return o instanceof TestLambdaResult && ((TestLambdaResult) o).ID == ID;
         }
+
         public static TestLambdaResult byID(int ID) {
             return new TestLambdaResult(ID, null);
         }
     }
+
     @Test
     public void testSimpleListening() throws Exception {
         ListenerGroup g = ListenerGroup.newGroup(Utils::testTestDocument);
@@ -48,12 +52,7 @@ public class IntegrationTest {
         int ID = 0;
         Function<Document, Element> extractElement = d -> d.select("p").first();
         // new listener
-        Listener
-                .listener()
-                .changed((e1, e2) -> !e1.text().equals(e2.text()))
-                .element(extractElement)
-                .action((e1, e2) -> results.add(new TestLambdaResult(ID, e2)))
-                .register(g);
+        Listener.listener().setChanged((e1, e2) -> !e1.text().equals(e2.text())).setSupplyElement(extractElement).setAction((e1, e2) -> results.add(new TestLambdaResult(ID, e2))).register(g);
         //change doc
         Document d = Utils.testTestDocument();
         extractElement.apply(d).appendText("hi!");
@@ -73,14 +72,8 @@ public class IntegrationTest {
         int ID = 1;
         Function<Document, Element> extractElement = d -> d.select("p").first();
         // new listener
-        Listener
-                .listener()
-                .changed((e1, e2) -> !e1.text().equals(e2.text()))
-                .element(extractElement)
-                .action((e1, e2) -> results.add(new TestLambdaResult(ID, e2)))
-                .config(ListenerConfig.defaults().autoCheckingOn(60))
-                .register(g);
-        for(int i = 0; i < 3; i++) {
+        Listener.listener().setChanged((e1, e2) -> !e1.text().equals(e2.text())).setSupplyElement(extractElement).setAction((e1, e2) -> results.add(new TestLambdaResult(ID, e2))).setConfig(ListenerConfig.defaults().autoCheckingOn(60)).register(g);
+        for (int i = 0; i < 3; i++) {
             //change doc
             Document d = Utils.testTestDocument();
             extractElement.apply(d).appendText("hi!");
@@ -90,7 +83,6 @@ public class IntegrationTest {
             assertEquals(results.size(), 1);
             checkResult(ID);
         }
-
     }
 
     private void checkResult(int ID) {
