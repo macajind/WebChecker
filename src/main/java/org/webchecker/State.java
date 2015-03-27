@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Class representing state of the login process depending on cookies.
  *
- * @author Matěj Kripner <kripnermatej@gmail.com>
+ * @author Matěj Kripner &lt;kripnermatej@gmail.com&gt;
  * @author Jindřich Máca (Tuník)
  * @version 1.0
  */

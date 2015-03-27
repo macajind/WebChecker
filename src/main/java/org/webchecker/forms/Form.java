@@ -19,8 +19,8 @@ import java.util.function.Predicate;
  * Allows user to fill in form {@link Input}s of supported {@link Type}s
  * and {@link Form#send} either by {@link Method#GET} or {@link Method#POST} method.
  *
- * @author Ondřej Štorc <o.storc@outlook.com>
- * @author Filip Sohajek <filip.sohajek@gmail.com>
+ * @author Ondřej Štorc &lt;o.storc@outlook.com&gt;
+ * @author Filip Sohajek &lt;filip.sohajek@gmail.com&gt;
  * @author Jindřich Máca (Tuník)
  * @version 1.0
  */
@@ -131,7 +131,7 @@ public class Form {
     /**
      * Send {@link Form} in current filled/part-filled/not filled state to his {@link Form#action} url address.
      * Sending proceeds different depending on {@link Form#method}, which can be {@link Method#GET} or {@link Method#POST}.
-     * When sending fail in some way or response status code is different from 200, application wil return {@link null}
+     * When sending fail in some way or response status code is different from 200, application wil return {@code null}
      *
      * @return response page in form of {@link Document}
      * @throws java.io.IOException if sending of the form fails or it returns HTTP respond code other then 200

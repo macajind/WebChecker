@@ -15,7 +15,7 @@ import java.util.function.Function;
  * <p>
  * The class is designed to provide maximal comfort for a user.
  *
- * @author Matěj Kripner<kripnermatej@gmail.com>
+ * @author Matěj Kripner&lt;kripnermatej@gmail.com&gt;
  * @version 1.0
  */
 public class Listener {

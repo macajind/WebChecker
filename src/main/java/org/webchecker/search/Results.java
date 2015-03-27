@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * A collection of {@link org.webchecker.search.Result} objects.
  *
- * @author Matěj Kripner <kripnermatej@gmail.com>
+ * @author Matěj Kripner &lt;kripnermatej@gmail.com&gt;
  * @version 1.0
  */
 public class Results {

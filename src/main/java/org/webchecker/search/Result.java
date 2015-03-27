@@ -8,7 +8,7 @@ import java.util.HashMap;
 /**
  * Class representing one result of searching.
  *
- * @author Matěj Kripner <kripnermatej@gmail.com>
+ * @author Matěj Kripner &lt;kripnermatej@gmail.com&gt;
  * @version 1.0
  */
 public class Result {

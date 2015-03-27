@@ -15,7 +15,7 @@ import java.util.function.Predicate;
  *
  * @author Matěj Kripner
  * @author Jindřich Máca (Tuník)
- * @author Ondřej Štorc <o.storc@outlook.com>
+ * @author Ondřej Štorc &lt;o.storc@outlook.com&gt;
  * @version 1.0
  */
 public final class Login {
@@ -25,7 +25,7 @@ public final class Login {
      *
      * @author Matěj Kripner
      * @author Jindřich Máca (Tuník)
-     * @author Ondřej Štorc <o.storc@outlook.com>
+     * @author Ondřej Štorc &lt;o.storc@outlook.com&gt;
      * @version 1.0
      */
     private static class LoginThread extends Thread {
@@ -166,7 +166,8 @@ public final class Login {
     /**
      * Method is used for starting automatic login. Always a given time period, the method tries to log on.
      *
-     * @param seconds indicate for how long the method attempt to log in again in seconds
+     * @param seconds  indicate for how long the method attempt to log in again in seconds
+     * @param isLogged {@link Predicate} if user is logged
      * @throws NotPreparedException if the instance is not prepared
      */
     public void startLogging(Long seconds, Predicate<Map<String, String>> isLogged) throws NotPreparedException {

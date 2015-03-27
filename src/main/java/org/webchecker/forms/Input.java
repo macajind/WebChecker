@@ -7,7 +7,7 @@ import com.sun.istack.internal.NotNull;
  * Only considers name, value and type attributes of HTML input element.
  *
  * @author Jindřich Máca (Tuník)
- * @author Matěj Kripner<kripnermatej@gmail.com>
+ * @author Matěj Kripner&lt;kripnermatej@gmail.com&gt;
  * @version 1.0
  */
 public class Input {

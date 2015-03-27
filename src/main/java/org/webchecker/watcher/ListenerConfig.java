@@ -7,7 +7,7 @@ import java.util.function.BiConsumer;
  * easily extend. There is no rule of number of listeners to one config, but one listener have to have
  * exact one config.
  *
- * @author Matěj Kripner <kripnermatej@gmail.com>
+ * @author Matěj Kripner &lt;kripnermatej@gmail.com&gt;
  * @version 1.0
  * @see Listener
  */
@@ -47,7 +47,7 @@ public class ListenerConfig {
     /**
      * Turn auto checking on with the given delay.
      * <p>
-     * The given delay has to be valid. In fact, delay is valid when:<br />
+     * The given delay has to be valid. In fact, delay is valid when:
      * {@code
      * delay >= {@link #MIN_AUTO_CHECKING}
      * }

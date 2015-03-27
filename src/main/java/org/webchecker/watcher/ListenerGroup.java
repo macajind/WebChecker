@@ -26,7 +26,7 @@ import java.util.function.Supplier;
  * Each listener contains the max age of document, that can be regarded as a fresh. If this parameter is not specify
  * in constructor, the default value will be used.
  *
- * @author Matěj Kripner <kripnermatej@gmail.com>
+ * @author Matěj Kripner &lt;kripnermatej@gmail.com&gt;
  * @version 1.0
  */
 public class ListenerGroup {
@@ -35,7 +35,7 @@ public class ListenerGroup {
 
     /**
      * Returns a new group with given document supplier and max refreshing delay. Both arguments has to be valid. This
-     * means, that {@code getDocument != null && maxRefreshingDelay >= ListenerConfig.MIN_AUTO_CHECKING} has to return
+     * means, that {@code getDocument != null && maxRefreshingDelay &gt;= ListenerConfig.MIN_AUTO_CHECKING} has to return
      * {@code true}.
      *
      * @param document           the document supplier for the new group

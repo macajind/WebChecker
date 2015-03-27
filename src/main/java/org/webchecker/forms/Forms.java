@@ -15,8 +15,8 @@ import java.net.URL;
  * So in the end, you can have prepared any number of {@link Form}s you like,
  * even from different web pages, and manipulate them as you please.
  *
- * @author Ondřej Štorc <o.storc@outlook.com>
- * @author Filip Sohajek <filip.sohajek@gmail.com>
+ * @author Ondřej Štorc &lt;o.storc@outlook.com&gt;
+ * @author Filip Sohajek &lt;filip.sohajek@gmail.com&gt;
  * @author Jindřich Máca (Tuník)
  * @version 1.0
  */
@@ -79,18 +79,20 @@ public final class Forms {
 
     /**
      * Should select form element by identifier from currently opened page/document and return it.
-     * When document is null application will throw {@link java.lang.NullPointerException}
-     * When application doesn't found any element, application will return {@code null}
-     * When found element is not form, application will try found another matching element, but if at page isn't any matching element application return {@link null}
-     * When on the page is more then one elements with same identifier, application will select first matching form element
+     * When application doesn't found any element, application will return {@code null}.
+     * When found element is not form, application will try found another matching element, but if at page isn't any matching element application return {@code null}.
+     * When on the page is more then one elements with same identifier, application will select first matching form element.
      *
      * @param identifier is CSS selector {@link String}. For more information's about CSS selectors visit this <a href='http://www.w3schools.com/cssref/css_selectors.asp'>page</a>
      * @return new instance of {@link Form}, which contains elements of found form and url page of {@link Document}
+     * @throws MalformedURLException if document has wrong url identifier
      */
     public Form selectForm(String identifier) throws MalformedURLException {
-        for (Element element : document.select(identifier)) {
-            if (isElementForm(element)) {
-                return new Form(element, new URL(document.baseUri()));
+        if (document != null) {
+            for (Element element : document.select(identifier)) {
+                if (isElementForm(element)) {
+                    return new Form(element, new URL(document.baseUri()));
+                }
             }
         }
         return null;

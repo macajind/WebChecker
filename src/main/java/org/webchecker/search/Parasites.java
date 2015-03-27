@@ -8,7 +8,7 @@ import java.util.LinkedList;
 /**
  * Static class providing implementation of well-known search engine parasites such as CSFD parasite.
  *
- * @author Matěj Kripner <kripnermatej@gmail.com>
+ * @author Matěj Kripner &lt;kripnermatej@gmail.com&gt;
  * @version 1.0
  */
 public class Parasites {

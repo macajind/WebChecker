@@ -14,7 +14,7 @@ import java.net.URL;
  * We can say, that the {@link #url(String)} is a help function for generating URL from query. This can be helpful when
  * searching a lot.
  *
- * @author Matěj Kripner <kripnermatej@gmail.com>
+ * @author Matěj Kripner &lt;kripnermatej@gmail.com&gt;
  * @version 1.0
  */
 public interface Parasite {
